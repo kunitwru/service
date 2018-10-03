@@ -1,0 +1,143 @@
+<style>
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+div#chat-area-09021990 {
+    position: fixed;
+    bottom: 0;
+    right: 10px;
+    height: 300px;
+    width: 250px;
+    border-left: 1px solid #73a3ec;
+    border-right: 1px solid #73a3ec;
+}
+div#chat-area-09021990.highlight {
+    height: 30px;
+    overflow: hidden; 
+}
+div#chat-area-09021990.highlight form {
+    display: none;
+}
+div#chat-area-09021990 h2.header-09021990 {
+    text-align: left;
+    background-color: #73a3ec;
+    color: #fff;
+    padding: 5px;
+    text-transform: uppercase;
+    padding-left: 20px;
+}
+form.form-chat-09021990 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    border-top: 1px solid #73a3ec;
+}
+form.form-chat-09021990 input {
+    height: 25px;
+    width: calc(100% - 46px);
+    float: left;
+    padding-left: 10px;
+    border: none;
+    outline: none
+}
+form.form-chat-09021990 input:focus {
+    border: none;
+    outline: none
+}
+form.form-chat-09021990 button {
+    height: 30px;
+    border: none;
+    float: left;
+    background-color: #73a3ec;
+    color: #fff;
+    width: 35px;
+}
+.list-message-09021990 {
+    height: 80%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 30px;
+    overflow: auto;
+}
+div#chat-area-09021990 h2.header-09021990 span.endChat {
+    float: right;
+}
+div#chat-area-09021990.highlight h2.header-09021990 span.endChat {
+    float: right;
+    display: none;
+}
+span.server-reply {
+    text-align: center;
+    width: 100%;
+    display: inline-block;
+    margin: auto;
+    font-size: 12px;
+}
+span.server-reply b {
+    color: red;
+    font-weight: bold;
+}
+.khach {
+    line-height: 23px;
+    display: inline-block;
+    width: 97%;
+    text-align: left;
+    padding: 2px 2px 4px 5px;
+    border-top: 1px #ccc solid;
+    color: #333;
+    font-size: 14px;
+}
+.khach .img {
+    background: #263f68;
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin: 2px 5px 0px 0px;
+    border: 2px solid #ccc;
+}
+.khach span {
+    color: #CCC;
+    font-size: 12px;
+}
+</style>
+<div id="chat-area-09021990" class="highlight">
+    <h2 class="header-09021990" onclick="toggleActionShow()">
+        <span>Chat</span>
+        <span class="endChat" onclick="deleteCookie()">X</span>
+    </h2>
+    <div id="before-chat-action">
+        <center>
+            <form onsubmit="return startActionChat()" id="start_chat_form">
+                <input name="yourname" type="text" placeholder="Nhập tên của bạn"  />
+                <button>Bắt đầu</button>
+            </form>
+        </center>
+    </div>
+    <div id="after-chat-action" style="display:none">
+        <div class="list-message-09021990">
+            
+        </div>
+        <form id="chat-action-09021990" onsubmit="return onSubmitForm()" class="form-chat-09021990">
+            <input id="message-09021990" type="text" /><button type="submit">Gửi</button>
+        </form>
+    </div>
+</div>
