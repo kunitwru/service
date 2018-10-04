@@ -55,6 +55,7 @@ function deleteCookie() {
         var expires = "expires=" + d.toGMTString(); 
         window.document.cookie = cname+"="+"; "+expires;
         socket.emit("CLIENT_KET_THUC_CHAT");
+        location.reload();
     } else {
         return false;
     }
@@ -148,6 +149,7 @@ function checkUserChatingStatus() {
         $("#roomid").val(yourData.roomId);
         socket.emit('USER_COME_BACK', yourData);
         socket.on("SERVER_SEND_OLD_MESSAGE", function(messages) {
+            $(".list-message-09021990").html("");
             messages.map((item)=> {
                 var overClass = 'khach';
                 if(item.isAdmin) {

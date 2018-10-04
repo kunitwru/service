@@ -12,12 +12,12 @@
     <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
 </head>
-<body>
+<body onload="reloadPage()">
         <div id="frame">
                 <div id="sidepanel">
                     <div id="profile">
                         <div class="wrap">
-                            <img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />
+                            <img id="profile-img" src="http://localhost:3000/khach.png" class="online" alt="" />
                             <p>Mike Ross</p>
                         </div>
                     </div>
@@ -32,8 +32,8 @@
                 </div>
                 <div class="content">
                     <div class="contact-profile">
-                        <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                        <p>Harvey Specter</p>
+                        <img src="http://localhost:3000/khach.png" alt="" />
+                        <p id="userAgenName"></p>
                     </div>
                     <div class="messages">
                         <ul>

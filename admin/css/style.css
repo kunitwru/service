@@ -421,10 +421,14 @@ body {
   #frame #sidepanel #contacts ul li.contact .wrap .meta .name {
     font-weight: 600;
   }
+  #frame #sidepanel #contacts ul li.contact .wrap .meta .name small {
+    float: right;
+    font-size: 12px;
+  }
   #frame #sidepanel #contacts ul li.contact .wrap .meta .preview {
     margin: 5px 0 0 0;
     padding: 0 0 1px;
-    font-weight: 400;
+    font-weight: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
