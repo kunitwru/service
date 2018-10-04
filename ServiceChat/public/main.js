@@ -4,12 +4,8 @@ p||(p=u?443:80),r=e.hostname!==location.hostname||p!==e.port,a=e.secure!==u}if(e
 let ROOT_URL = 'http://localhost:3000';
 var socket = io(ROOT_URL);
 const rootUserId = $("#chat-main-boot").attr("data-user-id")
-var currentIP = "127.0.0.1";
 var yourName = "";
-var yourRoom = "";
-$.getJSON('http://gd.geobytes.com/GetCityDetails?callback=?', function(data) {
-   currentIP = data.geobytesremoteip
-});
+
 $.ajax({
     type : 'GET',
     url : ROOT_URL+ '/chat.html',
@@ -17,79 +13,6 @@ $.ajax({
 }).done(function(data) {
     $("#chat-main-boot").html(data)
 })
-$(document).ready(function(){
-    var chatActionStatus = getCookie("chatActionStatus");
-    if(chatActionStatus == 1) {
-        $("#chat-area-09021990").removeClass('highlight');
-        checkUserChatingStatus();
-    } 
-})
-
-function toggleActionShow(){
-    $("#chat-area-09021990").toggleClass( "highlight" );
-    if($("#chat-area-09021990").hasClass('highlight')) {
-        setCookie('chatActionStatus', 0, 1);
-    } else {
-        setCookie('chatActionStatus', 1, 1);
-    }
-    checkUserChatingStatus();
-    
-}
-function onSubmitForm() {
-    var message = $("input#message-09021990").val()
-    if(!message.trim()) {
-        return false;
-    }
-    if (message.length > 200) {
-        alert("Nhập quá 200 ký tự");
-        return false;
-    }
-    socket.emit('CLIENT_SEND_DATA_MESSAGE', 
-            {
-                message : $("input#message-09021990").val(),
-                currentIP : currentIP,
-                yourRoom : yourRoom,
-                yourName : yourName,
-                isAdmin : false,
-                time : Math.floor(Date.now() / 1000)
-            }
-        );
-    $("input#message-09021990").val('')
-    return false
-}
-
-function checkUserChatingStatus() {
-    var storedChat = getCookie('store-your-room-chat');
-    if(storedChat.trim()) {
-        $("#before-chat-action").hide();
-        $("#after-chat-action").show();
-        let yourData = JSON.parse(storedChat);
-        yourName = yourData.yourname;
-        yourRoom = yourData.room_name;
-        socket.emit('USER_COME_BACK', yourData);
-        socket.on("SERVER_SEND_OLD_MESSAGE", function(messages) {
-            messages.map((item)=> {
-                var overClass = 'khach';
-                if(item.isAdmin) {
-                    overClass = 'admin';
-                }
-                var html = '<div class="'+ overClass +'">';
-                    html += '<img src="'+ ROOT_URL + '/' + overClass+'.png" alt="" class="img">'
-                    html += item.message + '<br>';
-                    html += '<span>✓ Đã gửi lúc '+ timeConverter(item.time) +'</span>';
-                    html += '</div>';
-                $(".list-message-09021990").append(html);
-                scrollChat();
-            })
-        })
-    } else {
-        $("#before-chat-action").show();
-        $("#after-chat-action").hide();
-        yourname = "";
-        yourRoom = "";
-    }
-}
-
 
 function timeConverter(UNIX_timestamp){
     var a = new Date(UNIX_timestamp * 1000);
@@ -131,10 +54,10 @@ function deleteCookie() {
         d.setTime(d.getTime() - (1000*60*60*24)); 
         var expires = "expires=" + d.toGMTString(); 
         window.document.cookie = cname+"="+"; "+expires;
+        socket.emit("CLIENT_KET_THUC_CHAT");
     } else {
         return false;
     }
-    
 }
 
 function scrollChat() {
@@ -147,12 +70,10 @@ function scrollChat() {
 function startActionChat() {
     var data = {
         yourname : $("#start_chat_form input[name=yourname]").val(),
-        yournIp : currentIP,
         user_id : rootUserId,
-        room_name : $("#start_chat_form input[name=yourname]").val().replace(' ','_') + '-' + Math.random().toString(11).replace('0.', ''),
+        status : true,
         created : new Date().getTime()
     };
-    setCookie("store-your-room-chat", JSON.stringify(data), 1);
     $("#before-chat-action").hide();
     $("#after-chat-action").show();
     socket.emit('ACTION_CREATE_ROOM_CHAT', data);
@@ -160,6 +81,10 @@ function startActionChat() {
     $("#message-09021990").focus();
     return false;
 }
+socket.on("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG", function() {
+    $(".list-message-09021990").html("");
+})
+
 
 socket.on('SERVER_SEND_MESSAGE_TO_CLIENT', function(item) {
     var overClass = 'khach';
@@ -175,6 +100,78 @@ socket.on('SERVER_SEND_MESSAGE_TO_CLIENT', function(item) {
     scrollChat();
 })
 
-socket.on("CLIENT_START_CHAT", function(msg) {
-    $(".list-message-09021990").append('<span class="server-reply">'+msg+'</span>');
+socket.on("CLIENT_START_CHAT", function(data) {
+    $("#roomid").val(data.roomInfo.roomId);
+    setCookie("store-your-room-chat", JSON.stringify(data.roomInfo), 1);
+    $(".list-message-09021990").append('<span class="server-reply">'+data.msg+'</span>');
+})
+
+function toggleActionShow(){
+    $("#chat-area-09021990").toggleClass( "highlight" );
+    if($("#chat-area-09021990").hasClass('highlight')) {
+        setCookie('chatActionStatus', 0, 1);
+    } else {
+        setCookie('chatActionStatus', 1, 1);
+    }
+    checkUserChatingStatus();
+    
+}
+function onSubmitForm() {
+    var message = $("input#message-09021990").val()
+    if(!message.trim()) {
+        return false;
+    }
+    if (message.length > 200) {
+        alert("Nhập quá 200 ký tự");
+        return false;
+    }
+    socket.emit('CLIENT_SEND_DATA_MESSAGE', 
+            {
+                message : $("input#message-09021990").val(),
+                room : $("input#roomid").val(),
+                yourName : yourName,
+                isAdmin : false,
+                time : Math.floor(Date.now() / 1000)
+            }
+        );
+    $("input#message-09021990").val('')
+    return false
+}
+
+function checkUserChatingStatus() {
+    var storedChat = getCookie('store-your-room-chat');
+    if(storedChat.trim()) {
+        $("#before-chat-action").hide();
+        $("#after-chat-action").show();
+        let yourData = JSON.parse(storedChat);
+        yourName = yourData.yourname;
+        $("#roomid").val(yourData.roomId);
+        socket.emit('USER_COME_BACK', yourData);
+        socket.on("SERVER_SEND_OLD_MESSAGE", function(messages) {
+            messages.map((item)=> {
+                var overClass = 'khach';
+                if(item.isAdmin) {
+                    overClass = 'admin';
+                }
+                var html = '<div class="'+ overClass +'">';
+                    html += '<img src="'+ ROOT_URL + '/' + overClass+'.png" alt="" class="img">'
+                    html += item.message + '<br>';
+                    html += '<span>✓ Đã gửi lúc '+ timeConverter(item.time) +'</span>';
+                    html += '</div>';
+                $(".list-message-09021990").append(html);
+                scrollChat();
+            })
+        })
+    } else {
+        $("#before-chat-action").show();
+        $("#after-chat-action").hide();
+        yourname = "";
+    }
+}
+$(document).ready(function(){
+    var chatActionStatus = getCookie("chatActionStatus");
+    if(chatActionStatus == 1) {
+        $("#chat-area-09021990").removeClass('highlight');
+        checkUserChatingStatus();
+    } 
 })

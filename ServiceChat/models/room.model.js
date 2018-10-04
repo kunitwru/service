@@ -3,10 +3,10 @@ var Schema = mongoose.Schema;
 
 var RoomSchema = new Schema({
     yourname : String,
-    yournIp : String,
     user_id : String,
-    room_name : String,
-    created : Number
+    created : Number,
+    status : Boolean,
+    messages : [{ type: Schema.Types.ObjectId, ref: 'Message' }]
 });
 
-module.exports = mongoose.model('rooms', RoomSchema);
+module.exports = mongoose.model('Room', RoomSchema);

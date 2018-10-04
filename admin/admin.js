@@ -1,0 +1,112 @@
+const socket = io("http://localhost:3000/");
+
+// send user info
+socket.emit("CLIENT_SEND_USER_ADMIN_INFO", {
+    userId : "phamvansinh09021990521989"
+});
+function getLastElemet(array, n) {
+    if (array == null) return void 0;
+    if (n == null) return array[array.length - 1];
+    return array.slice(Math.max(array.length - n, 0));
+}
+socket.on("SERVER_SEND_ROOM_LIST_TO_USER", function(rooms){
+    $("#contacts ul").html('');
+    rooms.map(item => {
+        var lastMessage = "";
+        if(item.messages.length > 0) {
+            var message = getLastElemet(item.messages);
+            lastMessage = message.message;
+        }
+        
+        var status = '';
+        if(item.status == true) {
+            status = 'online';
+        }
+        var html = '<li class="contact" onclick="joinRoom(\'' + item._id + '\')">';
+            html +='<div class="wrap">';
+            html +='<span class="contact-status '+status+'"></span>';
+            html +='<img src="http://localhost:3000/khach.png" alt="" />';
+            html +='<div class="meta">';
+            html +='<p class="name">'+ item.yourname +'</p>';
+            html +='<p class="preview"><i>'+ lastMessage +'</i></p>';
+            html +='</div>';
+            html +='</div>';
+            html +='</li>';
+            $("#contacts ul").append(html);
+    })
+});
+
+$(".messages").animate({ scrollTop: $(document).height() }, "fast");
+
+function joinRoom(roomId) {
+    socket.emit("AGENT_XAC_NHAN_JOIN_ROOM", roomId);
+    $("#chatForm input[name=roomid]").val(roomId);
+    socket.on("SERVER_SEND_OLD_MESSAGE", function(messages) {
+        $(".messages ul").html("");
+        messages.map((item)=> {
+            var overClass = 'replies';
+            var avatar = 'khach';
+            if (item.isAdmin == true) {
+                overClass = "sent";
+                avatar = 'admin';
+            }
+            var html = '<li class="'+ overClass +'">'
+                html +='<img src="http://localhost:3000/'+ avatar +'.png" alt="">';
+                html +='<p>'+item.message+'</p>';
+                html +='</li>';
+            $(".messages ul").append(html);
+            scrollChat();
+        })
+    })
+}
+
+
+function newMessage() {
+	message = $(".message-input input[name=message]").val();
+	if($.trim(message) == '') {
+		return false;
+	}
+    socket.emit('CLIENT_SEND_DATA_MESSAGE', 
+        {
+            message : message,
+            room : $("#chatForm input[name=roomid]").val(),
+            yourName : "Admin",
+            isAdmin : true,
+            time : Math.floor(Date.now() / 1000)
+        }
+    );
+    $(".message-input input[name=message]").val('');
+    scrollChat();
+};
+socket.on('SERVER_SEND_MESSAGE_TO_CLIENT', function(item) {
+    var overClass = 'replies';
+    var avatar = 'khach';
+    if (item.isAdmin == true) {
+        overClass = "sent";
+        avatar = 'admin';
+    }
+    var html = '<li class="'+ overClass +'">'
+        html +='<img src="http://localhost:3000/'+ avatar +'.png" alt="">';
+        html +='<p>'+item.message+'</p>';
+        html +='</li>';
+    $(".messages ul").append(html);
+    scrollChat();
+})
+function scrollChat() {
+    setTimeout(
+        function(){                        
+            $("div.messages").scrollTop($("div.messages").prop('scrollHeight'));
+        }, 0);
+}
+
+$('.submit').click(function() {
+  newMessage();
+});
+
+$(window).on('keydown', function(e) {
+  if (e.which == 13) {
+    newMessage();
+    return false;
+  }
+});
+

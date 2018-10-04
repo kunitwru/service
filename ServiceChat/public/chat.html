@@ -118,6 +118,25 @@ span.server-reply b {
     color: #CCC;
     font-size: 12px;
 }
+.admin {
+    line-height: 23px;
+    display: inline-block;
+    width: 97%;
+    text-align: right;
+    padding: 2px 5px 4px 2px;
+    border-top: 1px #ccc solid;
+    color: #333;
+}
+.admin .img {
+    float: right;
+    width: 32px;
+    height: 32px;
+    margin: 2px 0px 0px 5px;
+}
+.admin span {
+    color: #CCC;
+    font-size: 12px;
+}
 </style>
 <div id="chat-area-09021990" class="highlight">
     <h2 class="header-09021990" onclick="toggleActionShow()">
@@ -137,7 +156,9 @@ span.server-reply b {
             
         </div>
         <form id="chat-action-09021990" onsubmit="return onSubmitForm()" class="form-chat-09021990">
-            <input id="message-09021990" type="text" /><button type="submit">Gửi</button>
+            <input id="message-09021990" type="text" />
+            <input id="roomid" type="hidden" />
+            <button type="submit">Gửi</button>
         </form>
     </div>
 </div>
