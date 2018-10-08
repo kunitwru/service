@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách các thành viên</title>
+    <!--Custom Theme files-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <!--web-fonts-->
+    <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
+    <!--//web-fonts-->
+</head>
+<body>
+<div class="container">
+    <%- include('../elements/header'); %>
+    <h2>Cập nhật thông tin thành viên <%= user.username %></h2>
+    <div class="row">
+    <div class="col-sm-3">
+        <div class="text-center">
+            <form id="submitAvatar" class="form-profile" action="/fileUpload" method="POST"
+                  enctype="multipart/form-data">
+                <img width="110" height="110" src="<%= user.avatar %>" class="avatar img-circle img-thumbnail"
+                     id="avatar">
+                <h6>Tự động lưu lại sau khi chọn ảnh.</h6>
+                <input type="file" name="image" class="text-center center-block well well-sm">
+                <input type="hidden" value="<%= user._id %>" name="user_id" >
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-9">
+        <form action="/users/edit/<%= user._id %>" method="POST">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="email">Email address</label>
+                        <input type="email" name="email" class="form-control" value="<%= user.email %>" id="email"
+                               placeholder="Enter email">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="username">Tên</label>
+                        <input type="text" name="username" class="form-control" id="username" value="<%= user.username %>"
+                               placeholder="Tên ">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="userCode">Code</label>
+                        <input type="text" class="form-control" disabled id="userCode" value="<%= user.userCode %>">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="passwordConf">Mật khẩu</label>
+                        <input type="text" class="form-control" disabled id="passwordConf" value="<%= user.passwordConf %>">
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="isVip">Nâng cấp VIP</label>
+                        <select class="form-control" id="isVip" name="isVip">
+                            <option value="1"
+                            <%= user.isVip == '1' ? 'selected' : ''%>>Vip</option>
+                            <option value="0"
+                            <%= user.isVip == '0' ? 'selected' : ''%>>None</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="vipExpires">Hạn víp</label>
+                        <input type="date" class="form-control" name="vipExpires" id="vipExpires"
+                               value="<%= user.vipExpires; %>">
+                    </div>
+                </div>
+
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label for="userCode">Lời chào đầu</label>
+                        <textarea name="newMessage" class="form-control ckeditor" maxlength="250"
+                                  rows="3"><%= user.newMessage %></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label"></label>
+                <div class="col-md-8">
+                    <div class="btn-group">
+                        <input class="btn btn-primary btn-sm" value="Cập nhật" type="submit">
+                        <input class="btn btn-warning btn-sm" value="Hủy bỏ" type="reset">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#submitAvatar').on('submit', (function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.ret == 'OK') {
+                        $("img#avatar").attr('src', '/images/uploads/' + data.filename + '?time=' + new Date().getTime());
+                        $("input[name=image]").val('');
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message);
+                }
+            });
+        }));
+
+        $("input[name=image]").change(function () {
+            $("#submitAvatar").submit();
+        })
+    })
+</script>
+</body>
+</html>

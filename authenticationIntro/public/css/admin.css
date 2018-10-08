@@ -1,0 +1,11 @@
+body {
+    font-family: 'Jura', sans-serif;
+    background:#0a4981;
+}
+.container {
+    background: #fff;
+}
+i.fa-yellow {
+    color: #d4d447;
+    font-size: 23px;
+}

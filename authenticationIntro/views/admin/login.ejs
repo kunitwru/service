@@ -1,0 +1,44 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>Register Login with Authentication</title>
+<!--Custom Theme files-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="/css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!--web-fonts-->
+<link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
+<!--//web-fonts-->
+</head>
+<body>
+	<h1>Đăng nhập hệ thống admin 🚀 </h1>
+	<!-- main -->
+	<div class="main">
+		<div class="loginForm">
+			<div class="signin-form profile">
+				<h3>Đăng nhập</h3>
+				<% if (error) { %>
+					<h2 class="error-message"><%= error %></h2>
+				<% } %>
+				<div class="login-form">
+					<form action="/login" method="post">
+						<input type="text" name="logemail" placeholder="E-mail" required="">
+						<input type="password" name="logpassword" placeholder="Mật khẩu" required="">
+						<div class="tp">
+							<input type="submit" value="Đăng nhập">
+						</div>
+					</form>
+          <br />
+          <a href="/signup" class="formLinks">Đăng ký tài khoản</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

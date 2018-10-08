@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+    <link rel="stylesheet" href="css/home.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script>
+        let rootUserCode = '<%= user.userCode %>';
+    </script>
+</head>
+<body onload="reloadPage()">
+<%- include('elements/menu') %>
+        <div id="frame">
+                <div id="sidepanel">
+                    <div id="profile">
+                        <div class="wrap">
+                            <img id="profile-img" src="<%= user.avatar %>" class="online" alt="<%= user.username %>" />
+                            <p><%= user.username %></p>
+                            <a href="/logout" style="float:right" title="Đăng xuất" class="expand-button"><i class="fa fa-power-off" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div id="search">
+                        <label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
+                        <input type="text" placeholder="Search contacts..." />
+                    </div>
+                    <div id="contacts">
+                        <ul>
+                        </ul>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="contact-profile">
+                        <img src="http://uhthi.com:3000/khach.png" alt="" />
+                        <p id="userAgenName"></p>
+                    </div>
+                    <div class="messages">
+                        <ul>
+                            
+                        </ul>
+                    </div>
+                    <div class="message-input">
+                        <div class="wrap" id="chatForm">
+                        <input name="message" type="text" placeholder="Write your message..." />
+                        <input type="hidden" name="roomid" />
+                        <button class="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script src="http://uhthi.com:3000/socket.io/socket.io.js"></script>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

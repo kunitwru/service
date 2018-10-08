@@ -27,6 +27,7 @@ div#chat-area-09021990 {
     width: 250px;
     border-left: 1px solid #73a3ec;
     border-right: 1px solid #73a3ec;
+    z-index: 999999;
 }
 div#chat-area-09021990.highlight {
     height: 30px;
@@ -39,9 +40,13 @@ div#chat-area-09021990 h2.header-09021990 {
     text-align: left;
     background-color: #73a3ec;
     color: #fff;
-    padding: 5px;
     text-transform: uppercase;
-    padding-left: 20px;
+    background-image: url('http://uhthi.com:3000/chat.png');
+    background-repeat: no-repeat;
+    background-position: 5px center;
+    font-size: 13px;
+    font-weight: bolder;
+    padding: 8px 5px 8px 30px;
 }
 form.form-chat-09021990 {
     position: absolute;
@@ -80,10 +85,18 @@ form.form-chat-09021990 button {
 }
 div#chat-area-09021990 h2.header-09021990 span.endChat {
     float: right;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: bolder;
-    color: red;
+    color: black;
     cursor: pointer;
+    background-color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    opacity: 0.7;
+}
+div#chat-area-09021990 h2.header-09021990 span.endChat:hover {
+    opacity: 1;
+    color: red;
 }
 div#chat-area-09021990.highlight h2.header-09021990 span.endChat {
     float: right;
@@ -142,7 +155,7 @@ span.server-reply b {
 </style>
 <div id="chat-area-09021990" class="highlight">
     <h2 class="header-09021990" onclick="toggleActionShow()">
-        <span>Chat</span>
+        <span>Hỗ trợ online</span>
         <span class="endChat" onclick="deleteCookie()">X</span>
     </h2>
     <div id="before-chat-action">

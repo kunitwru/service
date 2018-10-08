@@ -12,8 +12,6 @@ app.use(express.static("./public"));
 app.set("view engine", "ejs");
 app.set("views", "./views")
 
-const helper = require('./helper/helper')
-
 var server = require('http').Server(app);
 var io = require("socket.io")(server);
 server.listen(3000);
@@ -28,6 +26,7 @@ const messageModel = require('./models/message.model');
 const roomModel = require('./models/room.model');
 
 io.on("connection", function (socket) {
+
     socket.on("ACTION_CREATE_ROOM_CHAT", function (dataRoom) {
         roomModel.create(dataRoom)
             .then((res) => {
@@ -57,11 +56,10 @@ io.on("connection", function (socket) {
             .catch((err) => {
                 console.log(err)
             });
-    })
+    });
+
     socket.on("CLIENT_SEND_DATA_MESSAGE", function (data) {
-        roomModel.findOne({
-                _id: data.room
-            })
+        roomModel.findOne({_id: data.room })
             .exec(function (err, room) {
                 if (err) return res.send(err);
                 messageModel.create(data)
@@ -78,13 +76,7 @@ io.on("connection", function (socket) {
     });
     // kết thúc chát và update status room
     socket.on("CLIENT_KET_THUC_CHAT", function () {
-        roomModel.updateOne({
-                _id: socket.roomChat
-            }, {
-                $set: {
-                    status: false
-                }
-            })
+        roomModel.updateOne({_id: socket.roomChat}, { $set: { status: false } })
             .exec()
             .then((result) => {
                 io.sockets.emit("NEW_CLIENT_REQUEST");
