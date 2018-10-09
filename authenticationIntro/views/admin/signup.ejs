@@ -7,7 +7,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html>
 <head>
-<title>Register Login with Authentication</title>
+<title>Đăng ký thành viên</title>
 <!--Custom Theme files-->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -15,27 +15,35 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!--web-fonts-->
 <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
 <!--//web-fonts-->
+
 </head>
 <body>
-	<h1>Đăng ký thành viên 🚀 </h1>
 	<!-- main -->
 	<div class="main">
 		<!--login-profile-->
 		<div class="agile">
 			<div class="signin-form profile">
 				<h3>Đăng ký</h3>
-
 				<div class="login-form">
+					<div>
+						<% if (errors && errors.length > 0) { %>
+						<ul class="error-message">
+							<% errors.forEach(function(error){ %>
+							<li><%= error.msg %></li>
+							<% }); %>
+						</ul>
+						<% } %>
+					</div>
 					<form action="/signup" method="post">
-						<input type="text" name="email" placeholder="E-mail" required="">
-						<input type="text" name="username" placeholder="Tên của bạn" required="">
-						<input type="text" name="website" placeholder="Website" required="">
-						<input type="password" name="password" placeholder="Mật khẩu" required="">
-						<input type="password" name="passwordConf" placeholder="Xác nhận mật khẩu" required="">
+						<input type="text" name="email" placeholder="E-mail" required="" value="<%= (typeof params == 'object') ? params.email : '' %>" >
+						<input type="text" name="username" placeholder="Tên của bạn" required="" value="<%= (typeof params == 'object') ? params.username : '' %>">
+						<input type="text" name="website" placeholder="Website" required="" value="<%= (typeof params == 'object') ? params.website : '' %>">
+						<input type="password" name="password" placeholder="Mật khẩu" required="" value="<%= (typeof params == 'object') ? params.password : '' %>">
+						<input type="password" name="passwordConf" placeholder="Xác nhận mật khẩu" required="" value="<%= (typeof params == 'object') ? params.passwordConf : '' %>">
 						<input type="submit" value="Đăng ký">
 					</form>
 					<br />
-					<a href="/" class="formLinks">Đăng nhập</a>
+					<a href="/login" class="formLinks">Đăng nhập</a>
 				</div>
 			</div>
 		</div>

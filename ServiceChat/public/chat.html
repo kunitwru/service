@@ -3,16 +3,16 @@
         position: fixed;
         bottom: 0;
         right: 10px;
-        height: 300px;
-        width: 250px;
+        height: 320px;
+        width: 310px;
         border-left: 2px solid #73a3ec;
         border-right: 2px solid #73a3ec;
         z-index: 999999;
         background-color: #73a3ec;
+        border-top-left-radius: 10px;
     }
     div#chat-area-09021990.highlight {
-        height: 30px;
-        overflow: hidden;
+        height: 0px;
     }
     div#chat-area-09021990.highlight form {
         display: none;
@@ -22,12 +22,17 @@
         background-color: #73a3ec;
         color: #fff;
         text-transform: uppercase;
-        background-image: url('http://uhthi.com:3000/chat.png');
+        background-image: url(https://fapps.site/chat.png);
         background-repeat: no-repeat;
-        background-position: 5px center;
+        background-position: 8px center;
         font-size: 13px;
         font-weight: bolder;
-        padding: 8px 5px 8px 30px;
+        padding: 8px 15px 8px 30px;
+        margin: 0;
+        position: absolute;
+        right: -2px;
+        top: -30px;
+        border-top-left-radius: 8px;
     }
     div#chat-area-09021990 form.form-chat-09021990 {
         position: absolute;
@@ -35,9 +40,10 @@
         left: 0;
         width: 100%;
         border-top: 1px solid #73a3ec;
+        background-color: #73a3ec;
     }
     div#chat-area-09021990 form.form-chat-09021990 input {
-        height: 25px;
+        height: 35px;
         width: calc(100% - 40px);
         float: left;
         padding: 0px 0 0 5px;
@@ -51,7 +57,7 @@
         outline: none
     }
     div#chat-area-09021990 form.form-chat-09021990 button {
-        height: 30px;
+        height: 35px;
         border: none;
         float: left;
         background-color: #73a3ec;
@@ -59,13 +65,14 @@
         width: 35px;
     }
     div#chat-area-09021990 .list-message-09021990 {
-        height: 80%;
+        height: 90%;
         width: 100%;
         position: absolute;
         left: 0;
         bottom: 30px;
         overflow: auto;
         background-color: #fff;
+        border-top-left-radius: 10px;
     }
     div#chat-area-09021990 h2.header-09021990 span.endChat {
         float: right;
@@ -149,13 +156,13 @@
         width: 100%;
     }
     #chat-area-09021990 input[name="yourname"] {
-        height: 30px;
+        height: 35px;
         border-top: 2px solid #73a3ec;
         border-bottom: 2px solid #73a3ec;
         border-left: none;
         border-right: none;
 
-        width: calc(100% - 5px);;
+        width: calc(100% - 0px);;
         font-weight: normal;
         font-size: 12px;
         padding: 0 0 0 5px;
@@ -226,8 +233,7 @@
 </style>
 <div id="chat-area-09021990" class="">
     <h2 class="header-09021990" onclick="toggleActionShow()">
-        <span>Hỗ trợ online</span>
-        <span class="endChat" onclick="deleteCookie()">X</span>
+        <span>Hỗ trợ</span>
     </h2>
     <div id="after-chat-action">
         <div class="list-message-09021990">

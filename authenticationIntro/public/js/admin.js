@@ -1,4 +1,30 @@
-const socket = io("http://localhost:3000/");
+const socket = io("https://fapps.site/");
+
+var tabActiveStatus = 1;
+$(window).focus(function() {
+    if (!tabActiveStatus){
+        tabActiveStatus = 1;
+    }
+});
+$(window).blur(function() {
+    clearInterval(tabActiveStatus);
+    tabActiveStatus = 0;
+});
+
+function playSound() {
+    var audio = new Audio('https://fapps.site/notification.wav');
+    audio.type = 'audio/wav';
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(function () {
+
+        }).catch(function (error) {
+            console.log('Failed to play....' + error);
+        });
+    }
+}
 
 
 function reloadPage() {
@@ -35,14 +61,14 @@ socket.on("SERVER_SEND_ROOM_LIST_TO_USER", function (rooms) {
         if (item.status == true) {
             status = 'online';
         }
-        var newStatus = ""
-        if (item.read_status){
-            newStatus = "contact-new";
+        var activeclass = "";
+        if (item._id == $("input[name=roomid]").val()) {
+            activeclass = "active";
         }
-        var html = '<li class="contact '+ newStatus +'" id="'+ item._id +'" onclick="joinRoom(\'' + item._id + '\', \'' + item.yourname + '\')">';
+        var html = '<li class="contact '+ activeclass +'" id="'+ item._id +'" onclick="joinRoom(\'' + item._id + '\', \'' + item.yourname + '\',  \'' + item.hostname + '\')">';
         html += '<div class="wrap">';
         html += '<span class="contact-status ' + status + '"></span>';
-        html += '<img src="http://uhthi.com:3000/khach.png" alt="" />';
+        html += '<img src="https://fapps.site/khach.png" alt="" />';
         html += '<div class="meta">';
         html += '<p class="name">' + item.yourname + '<small>' + timeConverter(lastTime) + '<span class="new-icon"></span></small></p>';
         html += '<p class="preview"><i>' + lastMessage + '</i></p>';
@@ -65,10 +91,15 @@ function timeConverter(UNIX_timestamp) {
     return time;
 }
 
-function joinRoom(roomId, name) {
+function joinRoom(roomId, name, hostname) {
     socket.emit("AGENT_XAC_NHAN_JOIN_ROOM", roomId);
     $("#chatForm input[name=roomid]").val(roomId);
-    $("#userAgenName").text(name);
+
+    var roomName = '<span class="phone">'+name+'</span>';
+    if (hostname != 'undefined') {
+        roomName += '<small class="title-link">(' + hostname + ')</small>';
+    }
+    $("#userAgenName").html(roomName);
     socket.on("SERVER_SEND_OLD_MESSAGE", function (messages) {
         $(".messages ul").html("");
         messages.map((item) => {
@@ -79,7 +110,7 @@ function joinRoom(roomId, name) {
                 avatar = 'admin';
             }
             var html = '<li class="' + overClass + '">'
-            html += '<img src="http://uhthi.com:3000/' + avatar + '.png" alt="">';
+            html += '<img src="https://fapps.site/' + avatar + '.png" alt="">';
             html += '<p>' + item.message + '</p>';
             html += '</li>';
             $(".messages ul").append(html);
@@ -115,11 +146,15 @@ socket.on('SERVER_SEND_MESSAGE_TO_CLIENT', function (item) {
         avatar = 'admin';
     }
     var html = '<li class="' + overClass + '">'
-    html += '<img src="http://uhthi.com:3000/' + avatar + '.png" alt="">';
+    html += '<img src="https://fapps.site/' + avatar + '.png" alt="">';
     html += '<p>' + item.message + '</p>';
     html += '</li>';
     $(".messages ul").append(html);
     scrollChat();
+    
+    if (!tabActiveStatus) {
+        playSound();
+    }
 })
 
 

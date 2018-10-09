@@ -10,13 +10,12 @@ var UserSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        unique: true,
         required: true,
         trim: true
     },
     website: {
         type: String,
-        required: true
+        required: false
     },
     password: {
         type: String,
@@ -92,6 +91,19 @@ UserSchema.pre('save', function (next) {
         next();
     })
 });
+
+UserSchema.pre('save', function (next) {
+    var user = this;
+    User.findOne({email: user.email})
+        .exec(function (err, user) {
+            if (err) {
+                return next(err)
+            } else if (user) {
+                var err = new Error("Email is ready");
+                return next(err);
+            }
+        });
+})
 
 
 var User = mongoose.model('User', UserSchema);

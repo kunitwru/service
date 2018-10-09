@@ -20,6 +20,7 @@
     <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
         <h2 style="margin-bottom: 30px; width: 100%; float: left;">Thêm mới thành viên </h2>
         <div class="clearfix"></div>
+
         <div class="col-sm-3">
             <div class="text-center">
                 <form id="submitAvatar" class="form-profile" action="/fileUpload" method="POST"
@@ -32,47 +33,52 @@
             </div>
         </div>
         <div class="col-sm-9">
-
-            <% if (error) { %>
-            <h2 class="error-message"><%= error %></h2>
-            <% } %>
+            <div>
+                <% if (errors && errors.length > 0) { %>
+                <ul class="error-message">
+                    <% errors.forEach(function(error){ %>
+                    <li><%= error.msg %></li>
+                    <% }); %>
+                </ul>
+                <% } %>
+            </div>
             <form action="/users/add" method="POST">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="email">Email address</label>
-                            <input type="email" name="email" class="form-control" value="" id="email" placeholder="Enter email">
+                            <input type="email" name="email" class="form-control" value="<%= (typeof params == 'object') ? params.email : '' %>" id="email" placeholder="Enter email">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="username">Tên</label>
-                            <input type="text" name="username" class="form-control" id="username" value="" placeholder="Tên ">
+                            <input type="text" name="username" class="form-control" id="username" value="<%= (typeof params == 'object') ? params.username : '' %>" placeholder="Tên ">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="website">Website</label>
-                            <input type="text" name="website" class="form-control" id="website" value="" placeholder="Website ">
+                            <input type="text" name="website" class="form-control" id="website" value="<%= (typeof params == 'object') ? params.website : '' %>" placeholder="Website ">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="userCode">Code</label>
-                            <input type="text" name="userCode" class="form-control" disabled id="userCode" value="" placeholder="Code mã nhúng gen tự động ">
+                            <input type="text" class="form-control" disabled id="userCode"  placeholder="Code mã nhúng gen tự động ">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="password">Mật khẩu</label>
-                            <input type="password" class="form-control" name="password" id="password" value=""
+                            <input type="password" class="form-control" name="password"  id="password" value="<%= (typeof params == 'object') ? params.password : '' %>"
                                    placeholder="******">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="passwordConf">Xác nhận mật khẩu</label>
-                            <input type="password" class="form-control" name="passwordConf" id="passwordConf" value=""
+                            <input type="password" class="form-control" name="passwordConf" id="passwordConf" value="<%= (typeof params == 'object') ? params.passwordConf : '' %>"
                                    placeholder="*******">
                         </div>
                     </div>
@@ -80,7 +86,7 @@
                         <div class="form-group">
                             <label for="isVip">Nâng cấp VIP</label>
                             <select class="form-control" id="isVip" name="isVip">
-                                <option value="1">Vip</option>
+                                <option value="1" >Vip</option>
                                 <option value="0">None</option>
                             </select>
                         </div>
@@ -88,7 +94,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="vipExpires">Hạn víp</label>
-                            <input type="date" class="form-control" name="vipExpires" id="vipExpires" value="">
+                            <input type="date" class="form-control" name="vipExpires" id="vipExpires" value="<%= (typeof params == 'object') ? params.vipExpires : '' %>">
                         </div>
                     </div>
                 </div>

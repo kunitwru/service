@@ -24,6 +24,7 @@
             <th scope="col">#</th>
             <th scope="col">Số điện thoại</th>
             <th scope="col">Room ID</th>
+            <th scope="col">Website</th>
             <th scope="col">Status</th>
             <th scope="col">Ngày kết nối</th>
         </tr>
@@ -36,6 +37,7 @@
             <td><%= dem %></td>
             <td><%= room.yourname %></td>
             <td><%= room.user_id %></td>
+            <td><%- room.hostname %></td>
             <td><%- (room.status) ? '<i class="fa fa-commenting"></i>' : '<i class="fa fa-comment"></i>' %></td>
             <td><%= room.created %></td>
         </tr>

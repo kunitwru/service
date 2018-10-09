@@ -15,6 +15,10 @@ var RoomSchema = new mongoose.Schema({
         required: true,
         default : true
     },
+    hostname : {
+        type: String,
+        required: false
+    },
     created : {
         type : String
     }
