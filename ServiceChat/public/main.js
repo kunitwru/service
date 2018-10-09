@@ -3,7 +3,7 @@ p||(p=u?443:80),r=e.hostname!==location.hostname||p!==e.port,a=e.secure!==u}if(e
 
 let ROOT_URL = 'http://localhost:3000/';
 var socket = io(ROOT_URL);
-const rootUserId = $("#chat-main-boot").attr("data-user-id")
+const rootUserId = $("#chat-main-boot").attr("data-user-id");
 var yourName = "";
 
 var tabActiveStatus = 1;
@@ -73,7 +73,17 @@ function deleteCookie() {
 
 function playSound() {
     var audio = new Audio('http://uhthi.com:3000/notification.wav');
-    audio.play();
+    audio.type = 'audio/wav';
+
+    var playPromise = audio.play();
+
+    if (playPromise !== undefined) {
+        playPromise.then(function () {
+
+        }).catch(function (error) {
+            console.log('Failed to play....' + error);
+        });
+    }
 }
 
 function scrollChat() {
@@ -214,8 +224,20 @@ function checkUserChatingStatus() {
     })
     
 }
+function onloadUser() {
+    const userCode = $("#chat-main-boot").attr("data-user-id");
+    socket.emit("CLIENT_REQUEST_USER_INFO", userCode);
+}
+socket.on("SERVER_SEND_AGENT_INFO", function (userInfo) {
+    $(".loichaodau .imageavatar img").attr("src", 'http://uhthi.com' + userInfo.avatar);
+    $(".loichaodau .imageavatar h2").text(userInfo.username);
+    $(".loichaodau .imageavatar span.hotline").text(userInfo.hotline);
+    $(".loichaodau .description-xinchao").html(userInfo.newMessage);
+});
+
 $(document).ready(function(){
     checkEixtsUser();
+    onloadUser();
     var chatActionStatus = getCookie("chatActionStatus");
     if(chatActionStatus == 1) {
         $("#chat-area-09021990").removeClass('highlight');

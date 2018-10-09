@@ -193,6 +193,36 @@
         height: 64px;
         margin: 0px 5px 0px 0px;
     }
+    .loichaodau {
+        width: 100%;
+        height: auto;
+    }
+    .loichaodau .imageavatar {
+        width: 100%;
+        float: left;
+        border-bottom: 1px solid #cccccc;
+    }
+    .loichaodau .imageavatar img {
+        width: 50px;height: 50px;
+        margin: 10px;
+        float: left; border: 1px solid #ccc;
+    }
+    .loichaodau .imageavatar h2 {
+        font-size: 17px;
+        font-weight: bolder;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+    .loichaodau .imageavatar span.hotline {
+        font-size: 12px;
+    }
+    .loichaodau .description-xinchao {
+        float: left;
+        padding: 5px;
+    }
+    .loichaodau .description-xinchao p {
+        margin: 0;
+    }
 </style>
 <div id="chat-area-09021990" class="">
     <h2 class="header-09021990" onclick="toggleActionShow()">
@@ -201,6 +231,16 @@
     </h2>
     <div id="after-chat-action">
         <div class="list-message-09021990">
+            <div class="loichaodau">
+                <div class="imageavatar">
+                    <img src="http://uhthi.com:3000/admin.png" class="avatar" />
+                    <h2>Admin</h2>
+                    <span class="hotline"></span>
+                </div>
+                <div class="description-xinchao">
+
+                </div>
+            </div>
             <div id="identityfine"></div>
         </div>
         <form onsubmit="return startActionChat()" id="start_chat_form" style="display:none">

@@ -45,6 +45,10 @@ var UserSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    hotline: {
+        type: String,
+        required: false
+    },
     isVip: {
         type: Boolean,
         required: true,

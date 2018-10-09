@@ -26,6 +26,7 @@ mongooseDB.connect('mongodb://localhost/pdb', {
 // include models
 const messageModel = require('./models/message.model');
 const roomModel = require('./models/room.model');
+const userModel = require('./models/user.model');
 
 io.on("connection", function (socket) {
     socket.on("ACTION_CREATE_ROOM_CHAT", function (dataRoom) {
@@ -65,7 +66,18 @@ io.on("connection", function (socket) {
             .exec(function (err, room) {
                 if (err){
                     return console.log(err);
-                };
+                }
+
+                // if (!room.read_status) {
+                //     roomModel.updateOne({_id: room._id}, {$set: {read_status: true}})
+                //         .exec((e, r) => {
+                //             if (e) {
+                //                 return console.log(e);
+                //             }
+                //             console.log(r);
+                //         });
+                // }
+
                 messageModel.create(data)
                     .then((message) => {
                         room.messages.push(message);
@@ -89,11 +101,12 @@ io.on("connection", function (socket) {
             })
             .exec()
             .then((result) => {
-                io.sockets.emit("NEW_CLIENT_REQUEST");
                 socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
             })
             .catch(err => console.log(err));
     });
+
+
 
     // server send list room
     socket.on("CLIENT_SEND_USER_ADMIN_INFO", function (userInfo) {
@@ -127,7 +140,36 @@ io.on("connection", function (socket) {
             .catch((err) => {
                 console.log(err);
             });
+        // update room read_status
+        roomModel.updateOne({
+            _id: socket.roomChat
+        }, {
+            $set: {
+                read_status: false
+            }
+        })
+            .exec()
+            .then((result) => {
+                console.log(result);
+            })
+            .catch(err => console.log(err));
     });
+
+    // onload client
+    socket.on("CLIENT_REQUEST_USER_INFO", function (userCode) {
+        userModel.findOne({userCode : userCode})
+            .exec((error, user) => {
+                if (error) {
+                    return console.log(error);
+                }
+                if (user === null) {
+                    return console.log("Không tồn tại");
+                } else {
+                    socket.emit("SERVER_SEND_AGENT_INFO", user);
+                }
+            })
+    })
+
     // user disconnect
     socket.on("disconnect", function () {
         roomModel.updateOne({
@@ -150,7 +192,3 @@ io.on("connection", function (socket) {
 app.get("/", function (req, res) {
     res.render("home");
 });
-
-app.get("/signup", function (req, res) {
-    res.render("admin/signup");
-})

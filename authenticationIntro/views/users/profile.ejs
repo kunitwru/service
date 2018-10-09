@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="//cdn.ckeditor.com/4.10.1/basic/ckeditor.js"></script>
+    <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
 </head>
 <body>
 <%- include('../elements/menu') %>
@@ -60,9 +60,9 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-lg-3 control-label showEnble">Code  <i style="padding-left: 10px;" class="fa fa-qrcode"></i> </label>
+                                <label class="col-lg-3 control-label">Hotline </label>
                                 <div class="col-lg-9">
-                                    <input class="form-control" value="<%= user.userCode %>" disabled>
+                                    <input name="hotline" class="form-control" value="<%= user.hotline %>" />
                                 </div>
                             </div>
                         </div>

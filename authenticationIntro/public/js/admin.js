@@ -35,12 +35,16 @@ socket.on("SERVER_SEND_ROOM_LIST_TO_USER", function (rooms) {
         if (item.status == true) {
             status = 'online';
         }
-        var html = '<li class="contact" onclick="joinRoom(\'' + item._id + '\', \'' + item.yourname + '\')">';
+        var newStatus = ""
+        if (item.read_status){
+            newStatus = "contact-new";
+        }
+        var html = '<li class="contact '+ newStatus +'" id="'+ item._id +'" onclick="joinRoom(\'' + item._id + '\', \'' + item.yourname + '\')">';
         html += '<div class="wrap">';
         html += '<span class="contact-status ' + status + '"></span>';
         html += '<img src="http://uhthi.com:3000/khach.png" alt="" />';
         html += '<div class="meta">';
-        html += '<p class="name">' + item.yourname + '<small>' + timeConverter(lastTime) + '</small></p>';
+        html += '<p class="name">' + item.yourname + '<small>' + timeConverter(lastTime) + '<span class="new-icon"></span></small></p>';
         html += '<p class="preview"><i>' + lastMessage + '</i></p>';
         html += '</div>';
         html += '</div>';
@@ -81,7 +85,10 @@ function joinRoom(roomId, name) {
             $(".messages ul").append(html);
             scrollChat();
         })
-    })
+    });
+    $("#contacts ul li").removeClass("active");
+    $('li#'+roomId).addClass("active");
+    $("#chatForm input[name=message]").prop('disabled', false);
 }
 
 

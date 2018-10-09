@@ -6,6 +6,7 @@ var RoomSchema = new Schema({
     user_id : String,
     created : Number,
     status : Boolean,
+    read_status: Boolean,
     messages : [{ type: Schema.Types.ObjectId, ref: 'Message' }]
 });
 

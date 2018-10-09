@@ -301,13 +301,15 @@ router.post('/profile', function (req, res, next) {
                     newMessage: req.body.newMessage,
                     password: req.body.password,
                     passwordConf: req.body.passwordConf,
-                    website : req.body.website
+                    website : req.body.website,
+                    hotline : req.body.hotline
                 }
             } else {
                 var userData = {
                     username: req.body.username,
                     newMessage: req.body.newMessage,
-                    website : req.body.website
+                    website : req.body.website,
+                    hotline : req.body.hotline
                 }
             }
             User.update({_id: user._id}, {$set: userData})
