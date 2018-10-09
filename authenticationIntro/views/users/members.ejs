@@ -26,7 +26,6 @@
             <th scope="col">Room ID</th>
             <th scope="col">Status</th>
             <th scope="col">Ngày kết nối</th>
-            <th scope="col">Action</th>
         </tr>
         </thead>
         <tbody>
@@ -39,9 +38,6 @@
             <td><%= room.user_id %></td>
             <td><%- (room.status) ? '<i class="fa fa-commenting"></i>' : '<i class="fa fa-comment"></i>' %></td>
             <td><%= room.created %></td>
-            <td>
-
-            </td>
         </tr>
         <% }); %>
         </tbody>

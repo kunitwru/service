@@ -9,3 +9,10 @@ i.fa-yellow {
     color: #d4d447;
     font-size: 23px;
 }
+#submitAvatar h6 {
+    font-size: 12px;
+    color: red;
+    font-weight: bold;
+    padding-top: 5px;
+    padding-bottom: 10px;
+}

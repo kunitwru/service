@@ -65,8 +65,11 @@ function checkLogined(req, res, next) {
         });
 }
 
+router.get("/", function (req, res) {
+    res.render('trangchu');
+})
 
-router.get("/", function (req, res, next) {
+router.get("/home", function (req, res, next) {
     User.findById(req.session.userId)
         .exec(function (error, user) {
             if (error) {
@@ -93,7 +96,7 @@ router.get('/login', function (req, res) {
                 if (user === null) {
                     return res.render("admin/login", {error: ""});
                 } else {
-                    return res.redirect("/");
+                    return res.redirect("/home");
                 }
             }
         });
@@ -117,7 +120,7 @@ router.post('/login', function (req, res) {
                 return res.render('admin/login', {error: "Tên đăng nhập hoặc mật khẩu bị sai"});
             } else {
                 req.session.userId = user._id;
-                return res.redirect('/');
+                return res.redirect('/home');
             }
         });
     } else {
@@ -157,7 +160,7 @@ router.post('/signup', function (req, res, next) {
                 return next(error);
             } else {
                 req.session.userId = user._id;
-                return res.redirect('/');
+                return res.redirect('/home');
             }
         });
 
@@ -188,7 +191,6 @@ router.get("/users/edit/:id", checkLogined, function (req, res) {
                     return res.send("Có lỗi xảy ra");
                 } else {
                     return res.render('users/edit', {user: user});
-                    // return res.send('<h1>Name: </h1>' + user.username + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
                 }
             }
         });
@@ -249,6 +251,7 @@ router.post('/users/add', function (req, res, next) {
             userCode: randomstring.generate(20),
             passwordConf: req.body.passwordConf,
             isVip: req.body.isVip,
+            website: req.body.website,
             vipExpires: req.body.vipExpires,
         }
 
@@ -297,12 +300,14 @@ router.post('/profile', function (req, res, next) {
                     username: req.body.username,
                     newMessage: req.body.newMessage,
                     password: req.body.password,
-                    passwordConf: req.body.passwordConf
+                    passwordConf: req.body.passwordConf,
+                    website : req.body.website
                 }
             } else {
                 var userData = {
                     username: req.body.username,
-                    newMessage: req.body.newMessage
+                    newMessage: req.body.newMessage,
+                    website : req.body.website
                 }
             }
             User.update({_id: user._id}, {$set: userData})

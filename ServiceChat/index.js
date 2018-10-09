@@ -1,5 +1,5 @@
 var express = require('express');
-const mongooseDB = require('mongoose')
+const mongooseDB = require('mongoose');
 var app = express();
 
 app.use(function (req, res, next) {
@@ -10,11 +10,13 @@ app.use(function (req, res, next) {
 
 app.use(express.static("./public"));
 app.set("view engine", "ejs");
-app.set("views", "./views")
+app.set("views", "./views");
+
+const helper = require('./helper/helper');
 
 var server = require('http').Server(app);
 var io = require("socket.io")(server);
-server.listen(3000);
+server.listen(process.env.PORT || 3000);
 
 // mongoose
 mongooseDB.Promise = global.Promise;
@@ -26,7 +28,6 @@ const messageModel = require('./models/message.model');
 const roomModel = require('./models/room.model');
 
 io.on("connection", function (socket) {
-
     socket.on("ACTION_CREATE_ROOM_CHAT", function (dataRoom) {
         roomModel.create(dataRoom)
             .then((res) => {
@@ -39,8 +40,8 @@ io.on("connection", function (socket) {
                 socket.join(res._id);
                 io.sockets.emit("NEW_CLIENT_REQUEST");
             })
-            .catch((err) => console.log("error action"))
-    })
+            .catch((err) => console.log("error action"));
+    });
 
     socket.on("USER_COME_BACK", function (dataRoom) {
         socket.roomChat = dataRoom.roomId;
@@ -54,14 +55,17 @@ io.on("connection", function (socket) {
                 io.to(socket.roomChat).emit("SERVER_SEND_OLD_MESSAGE", messages);
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err);
             });
     });
-
     socket.on("CLIENT_SEND_DATA_MESSAGE", function (data) {
-        roomModel.findOne({_id: data.room })
+        roomModel.findOne({
+                _id: data.room
+            })
             .exec(function (err, room) {
-                if (err) return res.send(err);
+                if (err){
+                    return console.log(err);
+                };
                 messageModel.create(data)
                     .then((message) => {
                         room.messages.push(message);
@@ -70,20 +74,26 @@ io.on("connection", function (socket) {
                         });
                         io.sockets.emit("NEW_CLIENT_REQUEST");
                     })
-                    .catch((err) => console.log(err))
+                    .catch((err) => console.log(err));
 
             });
     });
     // kết thúc chát và update status room
     socket.on("CLIENT_KET_THUC_CHAT", function () {
-        roomModel.updateOne({_id: socket.roomChat}, { $set: { status: false } })
+        roomModel.updateOne({
+                _id: socket.roomChat
+            }, {
+                $set: {
+                    status: false
+                }
+            })
             .exec()
             .then((result) => {
                 io.sockets.emit("NEW_CLIENT_REQUEST");
-                socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG")
+                socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
             })
             .catch(err => console.log(err));
-    })
+    });
 
     // server send list room
     socket.on("CLIENT_SEND_USER_ADMIN_INFO", function (userInfo) {
@@ -115,9 +125,9 @@ io.on("connection", function (socket) {
                 io.to(roomId).emit("SERVER_SEND_OLD_MESSAGE", messages);
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err);
             });
-    })
+    });
     // user disconnect
     socket.on("disconnect", function () {
         roomModel.updateOne({
@@ -130,13 +140,17 @@ io.on("connection", function (socket) {
             .exec()
             .then((result) => {
                 io.sockets.emit("NEW_CLIENT_REQUEST");
-                socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG")
+                socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
             })
             .catch(err => console.log(err));
-    })
-})
+    });
+});
 
 // router index
 app.get("/", function (req, res) {
     res.render("home");
+});
+
+app.get("/signup", function (req, res) {
+    res.render("admin/signup");
 })

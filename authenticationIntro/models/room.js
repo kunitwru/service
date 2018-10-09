@@ -14,10 +14,11 @@ var RoomSchema = new mongoose.Schema({
         type: Boolean,
         required: true,
         default : true
+    },
+    created : {
+        type : String
     }
-
 });
-
 
 var Room = mongoose.model('Room', RoomSchema);
 module.exports = Room;

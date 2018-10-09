@@ -6,7 +6,6 @@ var MessageSchema = new Schema({
     yourName: String,
     isAdmin : Boolean,
     time: Number,
-    isRead : false,
     room: {type: Schema.Types.ObjectId, ref: "Room", require: true},
 });
 

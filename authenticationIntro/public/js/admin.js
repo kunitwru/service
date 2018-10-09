@@ -1,4 +1,4 @@
-const socket = io("http://uhthi.com:3000/");
+const socket = io("http://localhost:3000/");
 
 
 function reloadPage() {

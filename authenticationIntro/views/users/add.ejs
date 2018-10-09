@@ -4,7 +4,7 @@
     <title>Danh sách các thành viên</title>
     <!--Custom Theme files-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
     <link rel="stylesheet" href="/css/admin.css">
@@ -17,40 +17,86 @@
 <body>
 <div class="container">
     <%- include('../elements/header'); %>
-    <h2>Thêm mới thành viên </h2>
-    <% if (error) { %>
-    <h2 class="error-message"><%= error %></h2>
-    <% } %>
-    <form action="/users/add" method="POST">
-        <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" name="email" class="form-control" value="" id="email" placeholder="Enter email">
+    <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+        <h2 style="margin-bottom: 30px; width: 100%; float: left;">Thêm mới thành viên </h2>
+        <div class="clearfix"></div>
+        <div class="col-sm-3">
+            <div class="text-center">
+                <form id="submitAvatar" class="form-profile" action="/fileUpload" method="POST"
+                      enctype="multipart/form-data">
+                    <img width="110" height="110" src="/images/noavatar.png" class="avatar img-circle img-thumbnail"
+                         id="avatar">
+                    <h6 class="">Ảnh đại diện sẽ được member tự cập nhật</h6>
+                    <input type="file" name="image" disabled class="text-center center-block well well-sm">
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="username">Tên</label>
-            <input type="text" name="username" class="form-control" id="username" value="" placeholder="Tên ">
+        <div class="col-sm-9">
+
+            <% if (error) { %>
+            <h2 class="error-message"><%= error %></h2>
+            <% } %>
+            <form action="/users/add" method="POST">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" name="email" class="form-control" value="" id="email" placeholder="Enter email">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="username">Tên</label>
+                            <input type="text" name="username" class="form-control" id="username" value="" placeholder="Tên ">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="website">Website</label>
+                            <input type="text" name="website" class="form-control" id="website" value="" placeholder="Website ">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="userCode">Code</label>
+                            <input type="text" name="userCode" class="form-control" disabled id="userCode" value="" placeholder="Code mã nhúng gen tự động ">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="password">Mật khẩu</label>
+                            <input type="password" class="form-control" name="password" id="password" value=""
+                                   placeholder="******">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="passwordConf">Xác nhận mật khẩu</label>
+                            <input type="password" class="form-control" name="passwordConf" id="passwordConf" value=""
+                                   placeholder="*******">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="isVip">Nâng cấp VIP</label>
+                            <select class="form-control" id="isVip" name="isVip">
+                                <option value="1">Vip</option>
+                                <option value="0">None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="vipExpires">Hạn víp</label>
+                            <input type="date" class="form-control" name="vipExpires" id="vipExpires" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="password">Mật khẩu</label>
-            <input type="password" class="form-control" name="password" id="password" value="" placeholder="******" >
-        </div>
-        <div class="form-group">
-            <label for="passwordConf">Xác nhận mật khẩu</label>
-            <input type="password" class="form-control" name="passwordConf" id="passwordConf" value="" placeholder="*******" >
-        </div>
-        <div class="form-group">
-            <label for="isVip">Nâng cấp VIP</label>
-            <select class="form-control" id="isVip" name="isVip">
-                <option value="1" >Vip</option>
-                <option value="0" >None</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="vipExpires">Hạn víp</label>
-            <input type="date" class="form-control" name="vipExpires" id="vipExpires" value="" >
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
+    </div>
 </div>
 
 </body>

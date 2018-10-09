@@ -19,7 +19,7 @@
 <body>
 <%- include('../elements/menu') %>
 <div id="frame" style="overflow: auto">
-    <div class="container" style="padding-top: 20px;">
+    <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
         <h1 class="page-header">Cập nhật thông tin cá nhân.</h1>
         <hr/>
         <div class="row">
@@ -60,9 +60,18 @@
                         </div>
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label class="col-lg-3 control-label">Code</label>
+                                <label class="col-lg-3 control-label showEnble">Code  <i style="padding-left: 10px;" class="fa fa-qrcode"></i> </label>
                                 <div class="col-lg-9">
                                     <input class="form-control" value="<%= user.userCode %>" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Website</label>
+                                <div class="col-lg-9">
+                                    <input type="text" name="website" class="form-control"
+                                           value="<%= user.website %>">
                                 </div>
                             </div>
                         </div>
@@ -84,15 +93,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label class="col-lg-3 control-label">Level</label>
-                                <div class="col-lg-9">
-                                    <input type="text" readonly class="form-control-plaintext"
-                                           value="<%= (user.role) ? 'Admin' : 'Member' %>">
-                                </div>
-                            </div>
-                        </div>
+
 
                         <div class="col-sm-6">
                             <div class="form-group">
@@ -125,6 +126,7 @@
                             <div class="col-md-8">
                                 <div class="btn-group">
                                     <input class="btn btn-primary btn-sm" value="Cập nhật" type="submit">
+                                    <button type="button" class="btn btn-info btn-sm showEnble">Lấy mã nhúng</button>
                                     <input class="btn btn-warning btn-sm" value="Hủy bỏ" type="reset">
                                 </div>
                             </div>
@@ -138,8 +140,35 @@
 
     </div>
 </div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Code Nhúng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
+        $(".showEnble").click(function(){
+            $("#exampleModal").modal();
+            var codenhung = '<div data-user-id="<%= user.userCode %>" id="chat-main-boot"></div>';
+            codenhung +='<script src="http://uhthi.com:3000/main.js">';
+            codenhung += '<\/script>';
+            $("#exampleModal .modal-title").text('<%= user.username %>');
+            $("#exampleModal .modal-body").text(codenhung);
+        });
+
         $('#submitAvatar').on('submit', (function (e) {
             e.preventDefault();
             var formData = new FormData(this);
