@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var randomstring = require("randomstring");
 var multer = require('multer');
+const { body } = require('express-validator/check');
 
 const User = require('../models/user');
 const Room = require('../models/room');
@@ -26,7 +27,7 @@ router.post('/fileUpload', upload.single('image'), function (req, res) {
         if (err) {
             res.send(500);
         } else {
-            User.update({_id: req.body.user_id}, {
+            User.updateOne({_id: req.body.user_id}, {
                 $set: {
                     avatar: '/images/uploads/' + req.body.user_id + ext
                 }
@@ -103,11 +104,12 @@ router.get('/login', function (req, res) {
 });
 
 router.get("/members", checkLogined, function (req, res) {
-    Room.find({})
+    Room.find({}).sort( { created: -1 })
         .exec(function (error, rooms) {
             if (error) {
                 return res.send("Có lỗi xảy ra");
             } else {
+                console.log(rooms);
                 res.render("users/members", {rooms: rooms})
             }
         });
@@ -131,40 +133,47 @@ router.post('/login', function (req, res) {
 
 // GET route for reading data
 router.get('/signup', function (req, res) {
-    res.render("admin/signup", {error: ""});
+    res.render("admin/signup", {errors: {}});
 });
 
-
 //POST route for updating data
-router.post('/signup', function (req, res, next) {
-    // confirm that user typed same password twice
-    if (req.body.password !== req.body.passwordConf) {
-        return res.render("admin/signup", {error: "Passwords do not match."});
-    }
-
-    if (req.body.email &&
-        req.body.username &&
-        req.body.password &&
-        req.body.passwordConf) {
-
-        var userData = {
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password,
-            userCode: randomstring.generate(20),
-            passwordConf: req.body.passwordConf,
+router.post('/signup', body('email').custom(value => {
+    return User.findOne({email : value}).then(user => {
+        if (user) {
+            return Promise.reject('Email đã được sử dụng');
         }
+    });
+}), function (req, res, next) {
 
-        User.create(userData, function (error, user) {
-            if (error) {
-                return next(error);
-            } else {
-                req.session.userId = user._id;
-                return res.redirect('/home');
-            }
-        });
+    req.checkBody("email", "Bạn nhập không phải là email.").isEmail();
+    req.checkBody("username", "Tên bắt buộc phải nhập.").notEmpty();
+    req.checkBody("password", "Mật khẩu bắt buộc phải nhập.").notEmpty();
+    req.checkBody("website", "Tên web bắt buộc phải nhập.").isURL();
+    req.checkBody("passwordConf", "Mật khẩu confirm không đúng").equals(req.body.password);
 
+    var errors = req.validationErrors();
+    if (errors) {
+        res.render('admin/signup', { errors: errors, params : req.body });
+        return;
     }
+
+    var userData = {
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+        userCode: randomstring.generate(20),
+        passwordConf: req.body.passwordConf,
+    }
+
+    User.create(userData, function (error, user) {
+        if (error) {
+            return next(error);
+        } else {
+            req.session.userId = user._id;
+            return res.redirect('/home');
+        }
+    });
+
 })
 
 
@@ -205,7 +214,7 @@ router.post("/users/edit/:id", checkLogined, function (req, res) {
                 if (user === null) {
                     return res.send("Có lỗi xảy ra");
                 } else {
-                    User.update({_id: req.params.id}, {$set: req.body})
+                    User.updateOne({_id: req.params.id}, {$set: req.body})
                         .exec()
                         .then(result => {
                             return res.redirect("/users");
@@ -228,42 +237,51 @@ router.delete("/users/delete", checkLogined, function (req, res) {
 
 
 router.get("/users/add", function (req, res, next) {
-    res.render('users/add', {error: ""});
+    res.render('users/add', {errors: {}});
+    return;
 });
 
 
 //POST route for updating data
-router.post('/users/add', function (req, res, next) {
-    // confirm that user typed same password twice
-    if (req.body.password !== req.body.passwordConf) {
-        return res.render("users/add", {error: "Passwords do not match."});
-    }
 
-    if (req.body.email &&
-        req.body.username &&
-        req.body.password &&
-        req.body.passwordConf) {
-
-        var userData = {
-            email: req.body.email,
-            username: req.body.username,
-            password: req.body.password,
-            userCode: randomstring.generate(20),
-            passwordConf: req.body.passwordConf,
-            isVip: req.body.isVip,
-            website: req.body.website,
-            vipExpires: req.body.vipExpires,
+router.post('/users/add', body('email').custom(value => {
+    return User.findOne({email : value}).then(user => {
+        if (user) {
+            return Promise.reject('Email đã được sử dụng');
         }
+    });
+}) ,function (req, res, next) {
+    req.checkBody("email", "Bạn nhập không phải là email.").isEmail();
+    req.checkBody("username", "Tên bắt buộc phải nhập.").notEmpty();
+    req.checkBody("password", "Mật khẩu bắt buộc phải nhập.").notEmpty();
+    req.checkBody("website", "Tên web bắt buộc phải nhập.").isURL();
+    req.checkBody("passwordConf", "Mật khẩu confirm không đúng").equals(req.body.password);
 
-        User.create(userData, function (error, user) {
-            if (error) {
-                return next(error);
-            } else {
-                return res.redirect('/users');
-            }
-        });
-
+    var errors = req.validationErrors();
+    if (errors) {
+        res.render('users/add', { errors: errors, params : req.body });
+        return;
     }
+
+    var userData = {
+        email: req.body.email,
+        username: req.body.username,
+        password: req.body.password,
+        userCode: randomstring.generate(20),
+        passwordConf: req.body.passwordConf,
+        isVip: req.body.isVip,
+        website: req.body.website,
+        vipExpires: req.body.vipExpires,
+    }
+
+    User.create(userData, function (errors, user) {
+        if (errors) {
+            return res.render("users/add", {errors: errors});
+        } else {
+            return res.redirect('/users');
+        }
+    });
+
 })
 
 
@@ -312,7 +330,7 @@ router.post('/profile', function (req, res, next) {
                     hotline : req.body.hotline
                 }
             }
-            User.update({_id: user._id}, {$set: userData})
+            User.updateOne({_id: user._id}, {$set: userData})
                 .exec((err, result) => {
                     if (err) {
                         res.statusCode = 500;

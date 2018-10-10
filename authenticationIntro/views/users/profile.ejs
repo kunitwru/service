@@ -127,7 +127,7 @@
                                 <div class="btn-group">
                                     <input class="btn btn-primary btn-sm" value="Cập nhật" type="submit">
                                     <button type="button" class="btn btn-info btn-sm showEnble">Lấy mã nhúng</button>
-                                    <input class="btn btn-warning btn-sm" value="Hủy bỏ" type="reset">
+                                    <input class="btn btn-success btn-sm" value="Gia hạn víp" type="button">
                                 </div>
                             </div>
                         </div>
@@ -135,9 +135,7 @@
                 </div>
 
             </div>
-
         </div>
-
     </div>
 </div>
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -163,7 +161,7 @@
         $(".showEnble").click(function(){
             $("#exampleModal").modal();
             var codenhung = '<div data-user-id="<%= user.userCode %>" id="chat-main-boot"></div>';
-            codenhung +='<script src="http://uhthi.com:3000/main.js">';
+            codenhung +='<script src="https://fapps.site/main.js">';
             codenhung += '<\/script>';
             $("#exampleModal .modal-title").text('<%= user.username %>');
             $("#exampleModal .modal-body").text(codenhung);

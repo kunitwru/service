@@ -68,16 +68,6 @@ io.on("connection", function (socket) {
                     return console.log(err);
                 }
 
-                // if (!room.read_status) {
-                //     roomModel.updateOne({_id: room._id}, {$set: {read_status: true}})
-                //         .exec((e, r) => {
-                //             if (e) {
-                //                 return console.log(e);
-                //             }
-                //             console.log(r);
-                //         });
-                // }
-
                 messageModel.create(data)
                     .then((message) => {
                         room.messages.push(message);
@@ -188,7 +178,7 @@ io.on("connection", function (socket) {
     });
 });
 
-// router index
-app.get("/", function (req, res) {
-    res.render("home");
-});
+// // router index
+// app.get("/", function (req, res) {
+//     res.render("home");
+// });

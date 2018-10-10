@@ -3,6 +3,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var session = require('express-session');
+var validator = require('express-validator');
 
 var MongoStore = require('connect-mongo')(session);
 
@@ -31,6 +32,7 @@ app.use(session({
 // parse incoming requests
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(validator());
 app.use(express.static("./public"));
 app.set("view engine", "ejs");
 app.set("views", "./views");
