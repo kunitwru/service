@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Danh sách các thành viên</title>
+    <!--Custom Theme files-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <!--web-fonts-->
+    <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <!--//web-fonts-->
+</head>
+<body>
+<div class="container">
+    <%- include('../elements/header'); %>
+    <h2>Danh sách thành viên</h2>
+    <table class="table table-border">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Số điện thoại</th>
+            <th scope="col">Room ID</th>
+            <th scope="col">Website</th>
+            <th scope="col">Status</th>
+            <th scope="col">Ngày kết nối</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% var dem = 0; %>
+        <% rooms.forEach(function(room){ %>
+        <% dem++; %>
+        <tr>
+            <td><%= dem %></td>
+            <td><%= room.yourname %></td>
+            <td><%= room.user_id %></td>
+            <td><%- room.hostname %></td>
+            <td><%- (room.status) ? '<i class="fa fa-commenting"></i>' : '<i class="fa fa-comment"></i>' %></td>
+            <td><%= room.created %></td>
+        </tr>
+        <% }); %>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

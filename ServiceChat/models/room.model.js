@@ -1,13 +1,28 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
-var RoomSchema = new Schema({
-    yourname : String,
-    user_id : String,
-    created : Number,
-    status : Boolean,
-    hostname : String,
-    messages : [{ type: Schema.Types.ObjectId, ref: 'Message' }]
+var RoomSchema = new mongoose.Schema({
+    yourname: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    user_id : {
+        type: String,
+        required: false
+    },
+    status : {
+        type: Boolean,
+        required: true,
+        default : true
+    },
+    hostname : {
+        type: String,
+        required: false
+    },
+    created : {
+        type : String
+    }
 });
 
-module.exports = mongoose.model('Room', RoomSchema);
+var Room = mongoose.model('Room', RoomSchema);
+module.exports = Room;

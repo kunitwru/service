@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Admin</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css'>
+    <link rel='stylesheet prefetch'
+          href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.2/css/font-awesome.min.css'>
+
+    <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/css/home.css">
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+</head>
+<body>
+<%- include('../elements/menu') %>
+<div id="frame" style="overflow: auto">
+    <div class="container" style="padding-top: 20px; padding-bottom: 20px;">
+        <h1 class="page-header">Cập nhật thông tin cá nhân.</h1>
+        <hr/>
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-3">
+                <div class="text-center">
+                    <form id="submitAvatar" class="form-profile" action="/fileUpload" method="POST"
+                          enctype="multipart/form-data">
+                        <img width="110" height="110" src="<%= user.avatar %>" class="avatar img-circle img-thumbnail"
+                             id="avatar">
+                        <h6>Tự động lưu lại sau khi chọn ảnh.</h6>
+                        <input type="file" name="image" class="text-center center-block well well-sm">
+                        <input type="hidden" value="<%= user._id %>" name="user_id" >
+                    </form>
+                </div>
+            </div>
+            <!-- edit form column -->
+            <div class="col-md-9 personal-info">
+                <div class="row">
+                    <form class="form-inline form-profile" action="/profile" method="post" role="form">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Email</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" value="<%= user.email %>" type="email" name="email"
+                                           placeholder="E-mail">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Họ và tên</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="username" value="<%= user.username %>" type="text"
+                                           placeholder="Họ và tên">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Hotline </label>
+                                <div class="col-lg-9">
+                                    <input name="hotline" class="form-control" value="<%= user.hotline %>" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Website</label>
+                                <div class="col-lg-9">
+                                    <input type="text" name="website" class="form-control"
+                                           value="<%= user.website %>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Vip</label>
+                                <div class="col-lg-9">
+                                    <input type="text" readonly class="form-control-plaintext"
+                                           value="<%= (user.isVip) ? 'Vip' : 'None' %>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Hạn víp</label>
+                                <div class="col-lg-9">
+                                    <input type="text" readonly class="form-control-plaintext"
+                                           value="<%= (user.vipExpires) ? user.vipExpires : 'Chưa có' %>">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Mật khẩu</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" name="password" value="" type="text" placeholder="*****">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Xác nhận mật khẩu</label>
+                                <div class="col-lg-9">
+                                    <input class="form-control" value="" name="passwordConf" placeholder="*****">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Lời chào đầu</label>
+                                <br/><br/>
+                                <div class="col-lg-12">
+                                    <textarea class="form-control ckeditor" rows="5" name="newMessage" maxlength="250"
+                                              placeholder="Lời chào đầu, tối đa 250 ký tự"><%= user.newMessage %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"></label>
+                            <div class="col-md-8">
+                                <div class="btn-group">
+                                    <input class="btn btn-primary btn-sm" value="Cập nhật" type="submit">
+                                    <button type="button" class="btn btn-info btn-sm showEnble">Lấy mã nhúng</button>
+                                    <input class="btn btn-success btn-sm" value="Gia hạn víp" type="button">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Code Nhúng</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".showEnble").click(function(){
+            $("#exampleModal").modal();
+            var codenhung = '<div data-user-id="<%= user.userCode %>" id="chat-main-boot"></div>';
+            codenhung +='<script src="https://fapps.site/main.js">';
+            codenhung += '<\/script>';
+            $("#exampleModal .modal-title").text('<%= user.username %>');
+            $("#exampleModal .modal-body").text(codenhung);
+        });
+
+        $('#submitAvatar').on('submit', (function (e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.ret == 'OK') {
+                        $("img#avatar").attr('src', '/images/uploads/' + data.filename + '?time=' + new Date().getTime());
+                        $("input[name=image]").val('');
+                    } else {
+                        alert(data.message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.message);
+                }
+            });
+        }));
+
+        $("input[name=image]").change(function () {
+            $("#submitAvatar").submit();
+        })
+    })
+</script>
+</body>
+</html>

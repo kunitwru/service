@@ -83,7 +83,7 @@
         $(".btn-info").click(function(){
             $("#exampleModal").modal();
             var codenhung = '<div data-user-id="'+ $(this).attr('code') +'" id="chat-main-boot"></div>';
-                codenhung +='<script src="https://fapps.site/main.js">';
+                codenhung +='<script src="http://chat24h.net:3000/main.js">';
                     codenhung += '<\/script>';
             $("#exampleModal .modal-title").text($(this).attr('title'));
             $("#exampleModal .modal-body").text(codenhung);

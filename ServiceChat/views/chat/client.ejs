@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="/jquery.min.js"></script>
+    <script>
+        let rootUserCode = '<%= user.userCode %>';
+    </script>
+</head>
+<body>
+<style>
+    div#chat-area-09021990 {
+        position: fixed;
+        bottom: 0;
+        right: 0px;
+        height: 315px;
+        width: 305px;
+        z-index: 999999;
+        background-color: #ffffff;
+        border-top-left-radius: 10px;
+        margin-bottom: 5px;
+    }
+
+    div#chat-area-09021990.highlight {
+        height: 0px;
+    }
+
+    div#chat-area-09021990.highlight form {
+        display: none;
+    }
+
+    div#chat-area-09021990 form.form-chat-09021990 {
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 100%;
+        background-color: #5f63a9;
+    }
+
+    div#chat-area-09021990 form.form-chat-09021990 input {
+        height: 35px;
+        width: calc(100% - 60px);
+        float: left;
+        padding: 0px 0 0 5px;
+        border: none;
+        outline: none;
+        font-size: 12px;
+        margin-top: 3px;
+    }
+
+    div#chat-area-09021990 form.form-chat-09021990 input:focus {
+        border: none;
+        outline: none
+    }
+
+    div#chat-area-09021990 form.form-chat-09021990 button {
+        height: 35px;
+        float: left;
+        background-color: #5f63a9;
+        color: #fff;
+        width: 48px;
+        margin-top: 3px;
+        border: 3px solid #fff;
+        margin-left: 6px;
+    }
+
+    div#chat-area-09021990 .list-message-09021990 {
+        height: 90%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 30px;
+        overflow: auto;
+        background-color: #fff;
+        border-top-left-radius: 10px;
+    }
+
+    div#chat-area-09021990 h2.header-09021990 span.endChat {
+        float: right;
+        font-size: 10px;
+        font-weight: bolder;
+        color: black;
+        cursor: pointer;
+        background-color: #fff;
+        padding: 2px 5px;
+        border-radius: 3px;
+        opacity: 0.7;
+    }
+
+    div#chat-area-09021990 h2.header-09021990 span.endChat:hover {
+        opacity: 1;
+        color: red;
+    }
+
+    div#chat-area-09021990.highlight h2.header-09021990 span.endChat {
+        float: right;
+        display: none;
+    }
+
+    div#chat-area-09021990 span.server-reply {
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+        margin: auto;
+        font-size: 12px;
+    }
+
+    div#chat-area-09021990 span.server-reply b {
+        color: red;
+        font-weight: bold;
+    }
+
+    div#chat-area-09021990 .serverEndChat {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+
+    div#chat-area-09021990 .khach {
+        line-height: 23px;
+        display: inline-block;
+        width: 97%;
+        text-align: left;
+        padding: 2px 2px 4px 5px;
+        border-top: 1px #ccc solid;
+        color: #333;
+        font-size: 14px;
+    }
+
+    div#chat-area-09021990 .khach .img {
+        float: left;
+        width: 32px;
+        height: 32px;
+        margin: 2px 5px 0px 0px;
+    }
+
+    div#chat-area-09021990 .khach span {
+        color: #CCC;
+        font-size: 12px;
+    }
+
+    div#chat-area-09021990 .admin {
+        line-height: 23px;
+        display: inline-block;
+        width: 97%;
+        text-align: right;
+        padding: 2px 5px 4px 2px;
+        border-top: 1px #ccc solid;
+        color: #333;
+    }
+
+    div#chat-area-09021990 .admin .img {
+        float: right;
+        width: 32px;
+        height: 32px;
+        margin: 2px 0px 0px 5px;
+    }
+
+    div#chat-area-09021990 .admin span {
+        color: #CCC;
+        font-size: 12px;
+    }
+
+    #chat-area-09021990 div.form-befor-name {
+        position: absolute;
+        bottom: 30px;
+        left: 0;
+        width: 100%;
+    }
+
+    #chat-area-09021990 input[name="yourname"] {
+        height: 35px;
+        border-top: 4px solid #5f63a9;
+        border-bottom: 2px solid #5f63a9;
+        border-left: none;
+        border-right: none;
+
+        width: calc(100% - 0px);;
+        font-weight: normal;
+        font-size: 12px;
+        padding: 0 0 0 5px;
+        margin-bottom: 5px;
+    }
+
+    #chat-area-09021990 input[name="yourname"]:focus {
+        outline: none;
+    }
+
+    #chat-area-09021990 button.button-start {
+        height: 30px;
+        padding: 0 20px;
+        margin-top: 10px;
+        border: 1px solid #73a3ec;
+        background-color: #73a3ec;
+        color: #fff;
+        font-weight: bold;
+    }
+
+    #chat-area-09021990 button.button-start:hover {
+        background-color: #2eab6c;
+        border: 1px solid #2eab6c;
+    }
+
+    #loichaobatdau .nhanvien {
+        background: #F7F7F7;
+        display: inline-block;
+        width: 97%;
+        text-align: left;
+        padding: 1px 2px 8px 5px;
+        border-bottom: 1px #ccc solid;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    #loichaobatdau .nhanvien .img {
+        float: left;
+        width: 64px;
+        height: 64px;
+        margin: 0px 5px 0px 0px;
+    }
+
+    .loichaodau {
+        width: 100%;
+        height: auto;
+    }
+
+    .loichaodau .imageavatar {
+        width: 100%;
+        float: left;
+        border-bottom: 1px solid #cccccc;
+    }
+
+    .loichaodau .imageavatar img {
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        float: left;
+        border: 1px solid #ccc;
+    }
+
+    .loichaodau .imageavatar h2 {
+        font-size: 17px;
+        font-weight: bolder;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .loichaodau .imageavatar span.hotline {
+        font-size: 12px;
+    }
+
+    .loichaodau .description-xinchao {
+        float: left;
+        padding: 5px;
+    }
+
+    .loichaodau .description-xinchao p {
+        margin: 0;
+    }
+</style>
+<div id="chat-area-09021990">
+    <div id="after-chat-action">
+        <div class="list-message-09021990">
+            <div class="loichaodau">
+                <div class="imageavatar">
+                    <img src='<%= user.avatar %>' class="avatar"/>
+                    <h2><%= user.username %></h2>
+                    <span class="hotline"><%= user.hotline %></span>
+                </div>
+                <div class="description-xinchao">
+                    <%- user.newMessage %>
+                </div>
+            </div>
+            <div id="identityfine"></div>
+        </div>
+        <form onsubmit="return startActionChat()" id="start_chat_form" style="display:none">
+            <div class="form-befor-name">
+                <input name="yourname" type="text" placeholder="Số điện thoại và ấn Enter"/>
+            </div>
+        </form>
+        <form id="chat-action-09021990" onsubmit="return onSubmitForm()" class="form-chat-09021990">
+            <input id="message-09021990" type="text" placeholder="Nhập nội dung ..." onfocus="checkEixtsUser()"/>
+            <input id="roomid" type="hidden"/>
+            <button type="submit">Gửi</button>
+        </form>
+    </div>
+</div>
+<script src="/main.js"></script>
+</body>
+</html>

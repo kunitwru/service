@@ -10,7 +10,7 @@ var UserSchema = new mongoose.Schema({
     },
     username: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     website: {
@@ -50,7 +50,7 @@ var UserSchema = new mongoose.Schema({
     },
     isVip: {
         type: Boolean,
-        required: true,
+        required: false,
         default: 0
     },
     vipExpires: {
@@ -92,18 +92,6 @@ UserSchema.pre('save', function (next) {
     })
 });
 
-UserSchema.pre('save', function (next) {
-    var user = this;
-    User.findOne({email: user.email})
-        .exec(function (err, user) {
-            if (err) {
-                return next(err)
-            } else if (user) {
-                var err = new Error("Email is ready");
-                return next(err);
-            }
-        });
-})
 
 
 var User = mongoose.model('User', UserSchema);

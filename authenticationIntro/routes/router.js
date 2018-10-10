@@ -178,7 +178,7 @@ router.post('/signup', body('email').custom(value => {
 
 
 // show users
-router.get("/users", checkLogined, function (req, res) {
+router.get("/users", function (req, res) {
     User.find({})
         .exec(function (error, users) {
             if (error) {
@@ -270,8 +270,7 @@ router.post('/users/add', body('email').custom(value => {
         userCode: randomstring.generate(20),
         passwordConf: req.body.passwordConf,
         isVip: req.body.isVip,
-        website: req.body.website,
-        vipExpires: req.body.vipExpires,
+        website: req.body.website
     }
 
     User.create(userData, function (errors, user) {
