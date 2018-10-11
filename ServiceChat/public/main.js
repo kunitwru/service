@@ -80,6 +80,7 @@ function scrollChat() {
             $("div.list-message-09021990").scrollTop($("div.list-message-09021990").prop('scrollHeight'));
         }, 0);
 }
+
 function isValidPhonenumber(p) {
   var phoneRe = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/;
   var digits = p.replace(/\D/g, "");
@@ -121,6 +122,7 @@ socket.on("CLIENT_START_CHAT", function(data) {
             time : Math.floor(Date.now() / 1000)
         }
     );
+    $("#identityfine").removeAttr('style');
 });
 
 socket.on("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG", function() {
@@ -259,20 +261,29 @@ function hiClient() {
             html += 'Chào bạn !.<br>';
             html += '<span>✓ Đã gửi lúc '+ timeConverter(Math.floor(Date.now() / 1000)) +' </span>';
             html += '</div>';
-        $("#identityfine").append(html);
+        $("#identityfine").append(html).css({'padding-bottom': '45px'});
         scrollChat();
+        playSound();
         setTimeout(function (){
             var html = '<div class="admin">';
                 html += '<img src="/admin.png" alt="" class="img">';
                 html += 'Mình có thể giúp gì cho bạn !.<br>';
                 html += '<span>✓ Đã gửi lúc '+ timeConverter(Math.floor(Date.now() / 1000)) +' </span>';
                 html += '</div>';
-            $("#identityfine").append(html);
+            $("#identityfine").append(html).css({'padding-bottom': '45px'});
             scrollChat();
+            playSound();
         },4000);
     },10000);
+    
 }
 $(document).ready(function(){
-    hiClient();
-    checkEixtsUser();
+    let storedChat = getCookie(cookieName);
+    if(storedChat) {
+        $("form#start_chat_form").hide();
+        checkUserChatingStatus();
+    } else {
+//        $("form#start_chat_form").show();
+        hiClient();
+    }
 });
