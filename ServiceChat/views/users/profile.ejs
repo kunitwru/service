@@ -160,8 +160,8 @@
     $(document).ready(function () {
         $(".showEnble").click(function(){
             $("#exampleModal").modal();
-            var codenhung = '<div data-user-id="<%= user.userCode %>" id="chat-main-boot"></div>';
-            codenhung +='<script src="https://fapps.site/main.js">';
+            var codenhung = '<div id="chat24h" data-user-id="<%= user.userCode %'"></div>';
+            codenhung +='<script src="https://chat24.net/chat24.js">';
             codenhung += '<\/script>';
             $("#exampleModal .modal-title").text('<%= user.username %>');
             $("#exampleModal .modal-body").text(codenhung);

@@ -4,7 +4,6 @@ var router = express.Router();
 var randomstring = require("randomstring");
 var multer = require('multer');
 const { body } = require('express-validator/check');
-
 //model
 const messageModel = require('../models/message.model');
 const Room = require('../models/room.model');
@@ -72,19 +71,26 @@ function checkLogined(req, res, next) {
 
 
 // router index
-router.get("/chatclient/:id", function (req, res) {
-    var userCode = req.params.id;
+router.get("/client/:code", function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    
+    var userCode = req.params.code.trim();
+    if (!userCode) {
+        return res.json({error : "ABC"});
+    }
+    console.log(req.query.domain);
     User.findOne({userCode : userCode})
         .exec((error, user) => {
             if (error) {
                 return console.log(error);
             }
             if (user === null) {
-                return console.log("Không tồn tại");
+                return res.render("chat/client", {user: ""});
             } else {
-                res.render("chat/client", {user: user});
+                return res.render("chat/client", {user: user, currentUrl : req.query.url, hostname: req.query.domain});
             }
-        })
+        });
 
 });
 

@@ -106,7 +106,7 @@
         $(".btn-info").click(function(){
             $("#exampleModal").modal();
             var codenhung = ' <div id="chat24h" data-user-id="'+ $(this).attr('code') +'"></div>';
-                codenhung +='<script src="http://chat24h.net/main.js">';
+                codenhung +='<script src="http://chat24h.net/chat24.js">';
                     codenhung += '<\/script>';
             $("#exampleModal .modal-title").text($(this).attr('title'));
             $("#exampleModal .modal-body").text(codenhung);

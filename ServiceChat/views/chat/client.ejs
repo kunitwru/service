@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="/jquery.min.js"></script>
     <script>
-        let rootUserCode = '<%= user.userCode %>';
+        let rootUserId = '<%= user.userCode %>';
+        let cookieName = '<%= hostname %>';
     </script>
 </head>
 <body>
@@ -16,11 +17,10 @@
         bottom: 0;
         right: 0px;
         height: 315px;
-        width: 305px;
+        width: 315px;
         z-index: 999999;
         background-color: #ffffff;
         border-top-left-radius: 10px;
-        margin-bottom: 5px;
     }
 
     div#chat-area-09021990.highlight {
@@ -36,7 +36,7 @@
         bottom: -2px;
         left: 0;
         width: 100%;
-        background-color: #5f63a9;
+        background-color: #0084ff;
     }
 
     div#chat-area-09021990 form.form-chat-09021990 input {
@@ -56,14 +56,14 @@
     }
 
     div#chat-area-09021990 form.form-chat-09021990 button {
-        height: 35px;
+        height: 34px;
         float: left;
-        background-color: #5f63a9;
+        background-color: #0084ff;
         color: #fff;
         width: 48px;
         margin-top: 3px;
-        border: 3px solid #fff;
-        margin-left: 6px;
+        border: 4px solid #fff;
+        margin-left: 5px;
     }
 
     div#chat-area-09021990 .list-message-09021990 {
@@ -151,6 +151,9 @@
         border-top: 1px #ccc solid;
         color: #333;
     }
+    div#chat-area-09021990 .admin.color-red {
+        color:red; font-size:14px;
+    }
 
     div#chat-area-09021990 .admin .img {
         float: right;
@@ -173,8 +176,8 @@
 
     #chat-area-09021990 input[name="yourname"] {
         height: 35px;
-        border-top: 4px solid #5f63a9;
-        border-bottom: 2px solid #5f63a9;
+        border-top: 2px solid #0084ff;
+        border-bottom: 2px solid #0084ff;
         border-left: none;
         border-right: none;
 
@@ -261,6 +264,10 @@
         margin: 0;
     }
 </style>
+<audio controls style="width:0; height:0">
+  <source src="/notification.wav" type="audio/wav">
+Your browser does not support the audio element.
+</audio>
 <div id="chat-area-09021990">
     <div id="after-chat-action">
         <div class="list-message-09021990">
@@ -279,6 +286,8 @@
         <form onsubmit="return startActionChat()" id="start_chat_form" style="display:none">
             <div class="form-befor-name">
                 <input name="yourname" type="text" placeholder="Số điện thoại và ấn Enter"/>
+                <input name="currentUrl" type="hidden" value="<%= currentUrl %>"/>
+                <input name="hostname" type="hidden" value="<%= hostname %>"/>
             </div>
         </form>
         <form id="chat-action-09021990" onsubmit="return onSubmitForm()" class="form-chat-09021990">
@@ -288,6 +297,7 @@
         </form>
     </div>
 </div>
+<script src="/socket.io/socket.io.js"></script>
 <script src="/main.js"></script>
 </body>
 </html>

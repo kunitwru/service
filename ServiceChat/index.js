@@ -8,13 +8,6 @@ var validator = require('express-validator');
 var MongoStore = require('connect-mongo')(session);
 
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
-
-
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(validator());
 app.use(express.static("./public"));
@@ -70,6 +63,20 @@ io.on("connection", function (socket) {
         socket.roomChat = dataRoom.roomId;
         socket.join(dataRoom.roomId);
         // get all data message
+        roomModel.updateOne({
+                 _id: socket.roomChat
+             }, {
+                 $set: {
+                     status: true
+                 }
+             })
+             .exec()
+             .then((result) => {
+                 io.sockets.emit("NEW_CLIENT_REQUEST");
+                 socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
+             })
+             .catch(err => console.log(err));
+        
         messageModel.find({
                 room: socket.roomChat
             })
@@ -81,6 +88,7 @@ io.on("connection", function (socket) {
                 console.log(err);
             });
     });
+    
     socket.on("CLIENT_SEND_DATA_MESSAGE", function (data) {
         roomModel.findOne({
                 _id: data.room
@@ -170,31 +178,28 @@ io.on("connection", function (socket) {
                 if (err) {
                     return console.log(err);
                 }
-                socket.emit("DELETE_ROOM_DONE");
-            })
-    })
-
-    socket.on("CLIENT_REQUEST_RENDER_FORM_CHAT", function () {
-        var html = fs.re
+                console.log("xin fhafo");
+                io.to(roomId).emit("DELETE_ROOM_DONE");
+            });
     });
 
 
     // user disconnect
-    // socket.on("disconnect", function () {
-    //     roomModel.updateOne({
-    //             _id: socket.roomChat
-    //         }, {
-    //             $set: {
-    //                 status: false
-    //             }
-    //         })
-    //         .exec()
-    //         .then((result) => {
-    //             io.sockets.emit("NEW_CLIENT_REQUEST");
-    //             socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
-    //         })
-    //         .catch(err => console.log(err));
-    // });
+     socket.on("disconnect", function () {
+         roomModel.updateOne({
+                 _id: socket.roomChat
+             }, {
+                 $set: {
+                     status: false
+                 }
+             })
+             .exec()
+             .then((result) => {
+                 io.sockets.emit("NEW_CLIENT_REQUEST");
+                 socket.emit("SERVER_THONG_BAO_KET_THUC_CHAT_THANH_CONG");
+             })
+             .catch(err => console.log(err));
+     });
 });
 
 
