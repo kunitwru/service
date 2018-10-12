@@ -180,7 +180,7 @@ function onSubmitForm() {
                 time : Math.floor(Date.now() / 1000)
             }
         );
-    $("input#message-09021990").val('');
+    $("input#message-09021990").val('').focus();
     return false;
 }
 

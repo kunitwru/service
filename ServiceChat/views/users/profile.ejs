@@ -160,9 +160,8 @@
     $(document).ready(function () {
         $(".showEnble").click(function(){
             $("#exampleModal").modal();
-            var codenhung = '<div id="chat24h" data-user-id="<%= user.userCode %'"></div>';
-            codenhung +='<script src="https://chat24.net/chat24.js">';
-            codenhung += '<\/script>';
+            var codenhung = '<div id="chat24h" data-user-id="<%= user.userCode %>"></div> ';
+            codenhung +='<script src="https://chat24.net/chat24.js"><\/script>';
             $("#exampleModal .modal-title").text('<%= user.username %>');
             $("#exampleModal .modal-body").text(codenhung);
         });

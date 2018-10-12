@@ -79,7 +79,6 @@ router.get("/client/:code", function (req, res) {
     if (!userCode) {
         return res.json({error : "ABC"});
     }
-    console.log(req.query.domain);
     User.findOne({userCode : userCode})
         .exec((error, user) => {
             if (error) {
@@ -88,6 +87,9 @@ router.get("/client/:code", function (req, res) {
             if (user === null) {
                 return res.render("chat/client", {user: ""});
             } else {
+                if(req.query.device == 'mobile'){
+                   return res.render("chat/mobile", {user: user, currentUrl : req.query.url, hostname: req.query.domain}); 
+                }
                 return res.render("chat/client", {user: user, currentUrl : req.query.url, hostname: req.query.domain});
             }
         });
