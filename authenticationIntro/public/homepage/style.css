@@ -134,7 +134,7 @@ input:focus {
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
-
+    text-transform: capitalize;
 }
 .main_menu li a:hover {
     color: #0084FF;
@@ -164,6 +164,7 @@ ul.menu li a {
     -webkit-transition: all .3s ease-in-out;
     -moz-transition: all .3s ease-in-out;
     transition: all .3s ease-in-out;
+    text-transform: capitalize;
 }
 
 ul.menu li a:hover {
@@ -281,6 +282,7 @@ ul.slicknav_nav {
 ul.slicknav_nav li a {
     border-bottom:  2px solid transparent;
     padding: 5px 25px;
+    text-transform: capitalize;
 }
 
 ul.slicknav_nav .boxed_btn.mobile {
@@ -293,14 +295,6 @@ ul.slicknav_nav .boxed_btn.mobile {
 ul.slicknav_nav li a:focus {
     outline: none;
 }
-
-
-
-
-
-
-
-
 /*===============================
     *Hero Area CSS
 ================================*/
