@@ -67,7 +67,24 @@ function checkLogined(req, res, next) {
 }
 
 router.get("/", function (req, res) {
-    res.render('trangchu');
+    let output = {};
+    Menu.find({})
+        .exec(function (error, menus) {
+            if (error) {
+                return res.send("Có lỗi xảy ra");
+            } else {
+                let menusData = {};
+                if(menus !== null){
+                    menus.forEach(function (item) {
+                        if(item.name !== "home") {
+                            let contents = JSON.parse(item.contents);
+                            menusData[item.name] = contents;
+                        }
+                    });
+                }
+                res.render('trangchu', {menus: menusData});
+            }
+        });
 })
 
 router.get("/home", function (req, res, next) {
@@ -340,7 +357,6 @@ router.post('/profile', function (req, res, next) {
         })
 });
 
-
 // GET for logout logout
 router.get('/logout', function (req, res, next) {
     if (req.session) {
@@ -353,6 +369,148 @@ router.get('/logout', function (req, res, next) {
             }
         });
     }
+});
+
+router.get('/menu', checkLogined, function (req, res) {
+    res.render('menu/index');
+});
+router.post('/menu/save/:name', function (req, res, next) {
+    Menu.findOne({name: req.params.name})
+        .exec(function (err, menu) {
+            if (err) {
+                res.statusCode = 500;
+                return res.send("Lỗi rùi")
+            }
+            let contents;
+            switch (req.params.name) {
+                case 'home':
+                    contents = JSON.stringify(req.body);
+                    break;
+                case 'features':
+                    let data = [];
+                    for (let i = 0; i < 6; i++) {
+                        let block = {
+                            title: req.body['title[]'][i],
+                            content: req.body['content[]'][i]
+                        };
+                        data.push(block);
+                    }
+                    contents = JSON.stringify(data);
+                    break;
+                case 'prices':
+                    let prices = [];
+                    for (let i = 0; i < 3; i++) {
+
+                        let keyBenefit = 'benefit['+ (i +1) +'][]';
+                        let block = {
+                            title: req.body['title[]'][i],
+                            price: req.body['price[]'][i],
+                            benefit: req.body[keyBenefit]
+                        };
+                        prices.push(block);
+                    }
+                    contents = JSON.stringify(prices);
+                    break;
+                case 'reviews':
+                    let reviewData = [];
+                    for (let i = 0; i < 4; i++) {
+                        let block = {
+                            title: req.body['title[]'][i],
+                            content: req.body['content[]'][i]
+                        };
+                        reviewData.push(block);
+                    }
+                    contents = JSON.stringify(reviewData);
+                    break;
+                default:
+                    break;
+            }
+            let menuData = {
+                name: req.params.name,
+                contents: contents
+            };
+            if (menu === null) {
+                Menu.create(menuData, function (error, user) {
+                    if (error) {
+                        return next(error);
+                    } else {
+                        return res.redirect('/menu');
+                    }
+                });
+            } else {
+                Menu.updateOne({name: req.params.name}, {$set: menuData})
+                    .exec((err, result) => {
+                        if (err) {
+                            res.statusCode = 500;
+                            return res.send("Không thể lưu dữ liệu")
+                        }
+                        return res.redirect('/menu');
+                    });
+            }
+        });
+});
+router.get('/menu/home', checkLogined, function (req, res) {
+    Menu.findOne({name: 'home'})
+        .exec(function (error, home) {
+            if (error) {
+                return res.send("Có lỗi xảy ra");
+            } else {
+                if (home !== null) {
+                    let contents = JSON.parse(home.contents);
+
+                    delete home.contents;
+                    home.title = contents.title;
+                    home.content = contents.contents;
+                }
+                return res.render('menu/home', {home: home});
+            }
+        });
+});
+router.get('/menu/features', checkLogined, function (req, res) {
+    Menu.findOne({name: 'features'})
+        .exec(function (error, features) {
+            if (error) {
+                return res.send("Có lỗi xảy ra");
+            } else {
+                if (features !== null) {
+                    let featureContents = JSON.parse(features.contents);
+                    delete features.contents;
+                    features.featureContents = featureContents;
+                }
+                return res.render('menu/features', {features: features});
+            }
+        });
+});
+router.get('/menu/prices', checkLogined, function (req, res) {
+    Menu.findOne({name: 'prices'})
+        .exec(function (error, prices) {
+            if (error) {
+                return res.send("Có lỗi xảy ra");
+            } else {
+
+                if (prices !== null) {
+                    let pricesContents = JSON.parse(prices.contents);
+                    delete prices.contents;
+                    prices.pricesContents = pricesContents;
+                }
+                return res.render('menu/price', {prices: prices});
+            }
+        });
+});
+router.get('/menu/reviews', checkLogined, function (req, res) {
+    Menu.findOne({name: 'reviews'})
+        .exec(function (error, reviews) {
+            if (error) {
+                return res.send("Có lỗi xảy ra");
+            } else {
+                if (reviews !== null) {
+                    let reviewContents = JSON.parse(reviews.contents);
+                    delete reviews.contents;
+                    reviews.reviewContents = reviewContents;
+                }
+                return res.render('menu/reviews', {reviews: reviews});
+            }
+        });
 });
 
 module.exports = router;

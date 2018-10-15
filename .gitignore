@@ -60,5 +60,7 @@ typings/
 # next.js build output
 .next
 .idea/
+authenticationIntro/.idea
+ServiceChat/.idea
 nbproject/
 /ServiceChat/nbproject/private/

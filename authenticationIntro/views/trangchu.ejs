@@ -478,66 +478,36 @@
                     <div class="main_menu">
                         <ul>
                             <li><a href="/#home">Home</a></li>
-                            <li><a href="/#features">Features</a></li>
-                            <li><a href="/#pricie-plan">Price Plan</a></li>
-                            <li><a href="/#reviews">Reviews</a></li>
-                            <li><a href="/#" class="boxed_btn">Get Now</a></li>
+                            <% if(menus) { %>
+                            <% for(let menu in menus){ %>
+                            <li><a href="/#<%= menu %>"><%= menu %></a></li>
+                            <% } } %>
                         </ul>
 
                     </div>
-
                     <div class="mobile-menu">
                         <ul class="menu" id="menu">
                             <li><a href="/#home">Home</a></li>
-                            <li><a href="/#features">Features</a></li>
-                            <li><a href="/#pricie-plan">Price Plan</a></li>
-                            <li><a href="/#reviews">Reviews</a></li>
+                            <% if(menus) { %>
+                            <% for(let menu in menus){ %>
+                            <li><a href="/#<%= menu %>"><%= menu %></a></li>
+                            <% } } %>
                             <li><a href="/#contacts">Contact</a></li>
                             <li><a href="/index.html" class="boxed_btn mobile">Get Now</a></li>
                         </ul>
-
                     </div>
-
                 </div>
-
                 <div class="col-sm-2 col-4 text-right">
-
                     <a href="/login" class="boxed_btn">Đăng nhập</a>
                     <div class="mobile-menu">
                         <div class="mobile-menu-show">
                             <svg class="svg-inline--fa fa-bars fa-w-14" aria-hidden="true" data-prefix="fas"
                                  data-icon="bars" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"
                                  data-fa-i2svg="">
-                                <path fill="currentColor"
-                                      d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
+                                <path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
                             </svg><!-- <i class="fas fa-bars"></i> -->
                         </div>
-                        <div class="mobile-menu-wrap">
-                            <div class="slicknav_menu"><a href="/#" aria-haspopup="true"
-                                                          role="button" tabindex="0"
-                                                          class="slicknav_btn slicknav_collapsed"
-                                                          style="outline: none;"><span
-                                    class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span
-                                    class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span
-                                    class="slicknav_icon-bar"></span></span></a>
-                                <ul class="slicknav_nav slicknav_hidden" aria-hidden="true" role="menu"
-                                    style="display: none;">
-                                    <li><a href="/#home" role="menuitem"
-                                           tabindex="-1">Trang chủ</a></li>
-
-                                    <li><a href="/#features" role="menuitem" tabindex="-1">Tính năng</a>
-                                    </li>
-
-                                    <li><a href="/#pricie-plan" role="menuitem" tabindex="-1">Bảng giá</a></li>
-
-                                    <li><a href="/#reviews" role="menuitem" tabindex="-1">Đánh giá</a>
-                                    </li>
-                                    <li><a href="/login" class="boxed_btn mobile"
-                                           role="menuitem" tabindex="-1">Đăng nhập</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
+                        <div class="mobile-menu-wrap"></div>
                     </div>
 
                 </div>
@@ -600,338 +570,127 @@
     <div class="container">
 
         <div class="row text-center">
-
+            <% if(menus){ %>
+            <% menus.reviews.forEach(function(review){ %>
             <div class="col-xl-3 col-lg-3 col-md-6">
-
                 <div class="single_social_item">
-
                     <div class="social_wrap">
-
-                        <h6>USERS</h6>
-
-                        <p>1600</p>
-
+                        <h6><%= review.title %></h6>
+                        <p><%= review.content %></p>
                     </div>
-
                 </div>
 
             </div>
-
-            <div class="col-xl-3 col-lg-3 col-md-6">
-
-                <div class="single_social_item">
-
-                    <div class="social_wrap">
-
-                        <h6>DOWNLOAD</h6>
-
-                        <p>600</p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-xl-3 col-lg-3 col-md-6">
-
-                <div class="single_social_item">
-
-                    <div class="social_wrap">
-
-                        <h6>PREMIUM</h6>
-
-                        <p>1200</p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="col-xl-3 col-lg-3 col-md-6">
-
-                <div class="single_social_item border-right-none">
-
-                    <div class="social_wrap">
-
-                        <h6>SHARE</h6>
-
-                        <p>25000</p>
-
-                    </div>
-
-                </div>
-
-            </div>
-
+            <% }); }%>
         </div>
-
     </div>
-
 </div>
-
 <!--End Scoial Item-->
 
 
 <!--Features-->
-
 <div class="section-padding features" id="features">
-
     <div class="container">
-
         <div class="row text-center">
-
             <div class="col-md-6 offset-md-3">
-
                 <div class="section-title">
-
                     <p class="uppercase-text">WHAT WE DO</p>
-
                     <h1>Awesome Features</h1>
-
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt. usmod
                         temporincididunt.</p>
-
                 </div>
-
             </div>
-
         </div>
-
         <div class="row">
-
             <div class="col-lg-3 text-right">
-
-                <div class="single_features_item margin-top-fix">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
+                <% if(menus){ %>
+                <% menus.features.forEach(function(feature, key){ %>
+                <% if(key < 3) { %>
+                <div class="single_features_item <%= key === 0 ? 'margin-top-fix' : '' %>">
+                    <h5><%= feature.title %></h5>
+                    <p><%= feature.content %></p>
                 </div>
-
-                <div class="single_features_item">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
-                </div>
-
-                <div class="single_features_item">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
-                </div>
-
+                <% }}); } %>
             </div>
 
             <div class="col-lg-6">
-
                 <div class="feature-border">
-
                     <div class="bg-border1">
-
                         <div class="dots">
-
                             <span class="dot dot-1"></span>
-
                             <span class="dot dot-2"></span>
-
                             <span class="dot dot-3"></span>
-
                             <span class="dot dot-4"></span>
-
                         </div>
-
                         <div class="bg-border2">
-
                             <div class="dots">
-
                                 <span class="dot dot-1"></span>
-
                                 <span class="dot dot-2"></span>
-
                             </div>
-
-                            <div class="bg-border3">
-
-
-                            </div>
-
+                            <div class="bg-border3"></div>
                         </div>
-
                     </div>
-
                 </div>
-
                 <img src="/homepage/features-img2.jpg" class="features_img" alt="features_img">
-
             </div>
-
             <div class="col-lg-3">
-
+                <% if(menus){ %>
+                <% menus.features.forEach(function(feature, key){ %>
+                <% if(key > 2) { %>
                 <div class="single_features_item">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
+                    <h5><%= feature.title %></h5>
+                    <p><%= feature.content %></p>
                 </div>
-
-                <div class="single_features_item">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
-                </div>
-
-                <div class="single_features_item">
-
-                    <h5>Unique Code</h5>
-
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor</p>
-
-                </div>
-
+                <% }}); } %>
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 <!--End Features-->
 
-
 <!--Pricing-->
-
-<div class="section-padding-off" id="pricie-plan">
-
+<div class="section-padding-off" id="prices">
     <div class="container">
-
         <div class="row">
-
             <div class="col-md-6 offset-md-3">
-
                 <div class="section-title">
-
                     <p class="uppercase-text">OUR PRICING</p>
-
                     <h1>Choose Price Plan</h1>
-
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt. usmod
                         temporincididunt.</p>
-
                 </div>
-
             </div>
-
         </div>
-
         <div class="row text-center">
-
+            <% if(menus){ %>
+            <% menus.prices.forEach(function(price, key){
+                let classHead;
+                if(key === 0){
+                     classHead = 'margin-top-fix';
+                } else if(key === 1){
+                    classHead = 'border-none';
+                }
+            %>
             <div class="col-lg-4">
-
-                <div class="single_pirce_box margin-top-fix">
-
+                <div class="single_pirce_box <%= classHead %>">
                     <div class="pricing_head">
-
-                        <h4>BASIC</h4>
-
-                        <p>$20<sub>/mo</sub></p>
-
-                    </div>
-
-                    <ul>
-
-                        <li>Up to five users</li>
-
-                        <li>Up to Fifteen Messages</li>
-
-                        <li>Unlimited Queries and Reservation</li>
-
-                        <li>No per Booking Charge</li>
-
-                    </ul>
-
-                    <a href="/#" class="boxed_btn">BUY NOW</a>
-
-                </div>
-
-            </div>
-
-            <div class="col-lg-4">
-
-                <div class="single_pirce_box border-none">
-
-                    <div class="pricing_head">
-
+                        <% if(key === 1){ %>
                         <div class="popular-item">
-
                             <h4>Most Popular</h4>
-
                         </div>
-
-                        <h4>ADVANCED</h4>
-
-                        <p>$60<sub>/mo</sub></p>
-
+                        <% } %>
+                        <h4><%= price.title %></h4>
+                        <p>$<%= price.price %><sub>/mo</sub></p>
                     </div>
-
                     <ul>
-
-                        <li>Up to Ten users</li>
-
-                        <li>Up to Thirty Messages</li>
-
-                        <li>Unlimited Queries and Reservation</li>
-
-                        <li>No per Booking Charge</li>
-
+                        <% price.loiich.forEach(function(item){ %>
+                        <li><%= item %></li>
+                        <% }); %>
                     </ul>
-
                     <a href="/#" class="boxed_btn">BUY NOW</a>
-
                 </div>
-
             </div>
-
-            <div class="col-lg-4">
-
-                <div class="single_pirce_box">
-
-                    <div class="pricing_head">
-
-                        <h4>PREMIUM</h4>
-
-                        <p>$90<sub>/mo</sub></p>
-
-                    </div>
-
-                    <ul>
-
-                        <li>Up to Tweenty users</li>
-
-                        <li>Up to Fifty Messages</li>
-
-                        <li>Unlimited Queries and Reservation</li>
-
-                        <li>No per Booking Charge</li>
-
-                    </ul>
-
-                    <a href="/#" class="boxed_btn">BUY NOW</a>
-
-                </div>
-
-            </div>
-
+            <% }); } %>
         </div>
 
     </div>
@@ -1511,15 +1270,10 @@
                                                      data-fa-i2svg=""><path fill="currentColor"
                                                                             d="M259.3 17.8L194 150.2 47.9 171.5c-26.2 3.8-36.7 36.1-17.7 54.6l105.7 103-25 145.5c-4.5 26.3 23.2 46 46.4 33.7L288 439.6l130.7 68.7c23.2 12.2 50.9-7.4 46.4-33.7l-25-145.5 105.7-103c19-18.5 8.5-50.8-17.7-54.6L382 150.2 316.7 17.8c-11.7-23.6-45.6-23.9-57.4 0z"></path></svg>
                                                 <!-- <i class="fa fa-star"></i> -->
-
                                             </span>
-
                                         </h6>
-
                                         <h5>ALEX RAHMASUX</h5>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -1542,97 +1296,48 @@
                     </div>
                     <div class="owl-dots disabled"></div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
-
 <!--End Textimonial Area-->
-
-
 <!--Footer Area-->
-
 <div class="footer_area">
-
     <div class="container">
-
         <div class="row">
-
             <div class="col-lg-4 col-md-5 text-left">
-
                 <p>© Apprat 2018 Designed by <a href="/#">ThemeXtar</a></p>
-
             </div>
-
             <div class="col-lg-8 col-md-7 text-right">
-
                 <ul>
-
                     <li><a href="/#">Terms and Conditions</a></li>
-
                     <li><a href="/#">Privacy and Policy</a></li>
-
                     <li><a href="/#">Contact Us</a></li>
-
                 </ul>
-
             </div>
-
         </div>
-
     </div>
-
 </div>
-
-
 <!--Bootstrap 4 JS-->
-
 <script src="/homepage/bootstrap.min.js"></script>
-
-
 <!--Owl-FontAwesome 5 JS-->
-
 <script src="/homepage/all.min.js"></script>
-
-
 <!--Owl-Carousel 2.3.4 JS-->
-
 <script src="/homepage/owl.carousel.min.js"></script>
-
-
 <!--BackToTOp Button JS-->
-
 <script src="/homepage/ap-scroll-top.min.js"></script>
-
 <script src="/homepage/backtotop.js"></script>
-
-
 <!--MagnificPop JS-->
-
 <script src="/homepage/jquery.magnific-popup.min.js"></script>
-
-
 <!--MobileMenu SlickNav JS-->
-
 <script src="/homepage/jquery.slicknav.min.js"></script>
-
-
 <!--Smoothscroll and Sticky Header JS-->
 
 <script src="/homepage/jquery.smoothscroll.min.js"></script>
 
 <script src="/homepage/jquery.sticky.js"></script>
-
-
 <!--Page Acitve JS-->
-
 <script src="/homepage/page_active_script.js"></script>
-
-
 <div class="apst-wrapper apst-enabled apst-theme-default apst-right apst-bottom apst-hidden" style="display: none;">
     <div class="apst-button"></div>
 </div>
