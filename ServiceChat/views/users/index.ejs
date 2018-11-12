@@ -24,24 +24,29 @@
                     <label for="staticEmail2" class="sr-only">Email</label>
                     <input type="text" class="form-control" name="key" id="staticEmail2" value="<%= query.key %>" placeholder="Nhập email tìm kiếm">
                 </div>
-                <!--<div class="form-group mb-2 mx-sm-3">-->
-                    <!--<label for="phone" class="sr-only">Email</label>-->
-                    <!--<input type="text" class="form-control" name="phone" id="phone" placeholder="Số điện thoai">-->
-                <!--</div>-->
-                <!--<div class="form-group mb-2">-->
-                    <!--<select class="form-control" name="isVip">-->
-                        <!--<option>Trạng thái Víp</option>-->
-                        <!--<option value="0">Chưa Vip</option>-->
-                        <!--<option value="1">Vip</option>-->
-                    <!--</select>-->
-                <!--</div>-->
                 <div class="mx-sm-3">
                     <button type="submit" class="btn btn-primary mb-2">Tìm kiếm</button>
                 </div>
 
             </form>
         </div>
-    <table class="table table-border">
+        <%
+        function formatDate(date) {
+            if(!date) {
+                return '';
+            }
+            var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+            if (month.length < 2) month = '0' + month;
+            if (day.length < 2) day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        %>
+    <table class="table table-border " id="tableList">
             <thead class="thead-dark">
                 <tr>
                     <th scope="col">#</th>
@@ -50,7 +55,7 @@
                     <th scope="col">Email</th>
                     <th scope="col">Mã code</th>
                     <th scope="col">Vip</th>
-                    <th scope="col">Hạn vip</th>
+                    <th scope="col" style="width: 120px;">Hạn vip</th>
                     <th scope="col">Mật khẩu</th>
                     <th scope="col">Role</th>
                     <th scope="col">Action</th>
@@ -69,7 +74,7 @@
                             <%= user.userCode %>
                         </td>
                         <td><%- (user.isVip) ? '<i class="fa fa-star fa-yellow"></i>' : '<i class="fa fa-star-o fa-yellow"></i>' %></td>
-                        <td><%= user.vipExpires %></td>
+                        <td><%= formatDate(user.vipExpires) %></td>
                         <td><%= user.passwordConf %></td>
                         <td><%= (user.role) ? 'Admin' : 'Member' %></td>
                         <td>
@@ -106,7 +111,7 @@
         $(".btn-info").click(function(){
             $("#exampleModal").modal();
             var codenhung = ' <div id="chat24h" data-user-id="'+ $(this).attr('code') +'"></div>';
-                codenhung +='<script src="http://chat24h.net/main.js">';
+                codenhung +='<script src="https://chat24h.net/chat24.js">';
                     codenhung += '<\/script>';
             $("#exampleModal .modal-title").text($(this).attr('title'));
             $("#exampleModal .modal-body").text(codenhung);

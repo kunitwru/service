@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thêm bài viết mới</title>
+    <!--Custom Theme files-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+    <!--web-fonts-->
+    <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+    <!--//web-fonts-->
+</head>
+<body>
+<div class="container">
+    <%- include('../elements/header'); %>
+    <div class="row" style="padding-top: 20px; padding-bottom: 20px;">
+        <h2 style="margin-bottom: 30px; width: 100%; float: left;">Cập nhật thông tin </h2>
+        <div class="clearfix"></div>
+        <form action="/post/edit/<%= (typeof params == 'object') ? params._id : '' %>" method="POST" enctype="multipart/form-data">
+            <div class="row col-sm-12">
+        <div class="col-sm-3">
+            <div class="text-center">
+                <img width="110" height="110" src="<%= (typeof params == 'object') ? params.images : '/images/noavatar.png' %>" class="avatar img-circle img-thumbnail"
+                        id="avatar">
+                <h6 style="font-size:12px; color:red" class="">Hình ảnh đại diện</h6>
+                <input type="file" accept="image/*" name="images" id="images" class="text-center center-block well well-sm" style="font-size:12px;" >
+            </div>
+        </div>
+        <div class="col-sm-9">
+                <div>
+                        <% if (errors && errors.length > 0) { %>
+                        <ul class="error-message">
+                            <% errors.forEach(function(error){ %>
+                            <li><%= error.msg %></li>
+                            <% }); %>
+                        </ul>
+                        <% } %>
+                    </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="title">Tiêu đề</label>
+                            <input type="text" name="title" class="form-control" value="<%= (typeof params == 'object') ? params.title : '' %>" id="title" placeholder="Tiêu đề bài viết">
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="content">Nội dung</label>
+                            <textarea name="content" class="form-control ckeditor" rows="4" id="content" placeholder="Nội dung bài viết"><%= (typeof params == 'object') ? params.content : '' %></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+    </form>
+</div>
+</div>
+<script>
+function readURL(input) {
+
+if (input.files && input.files[0]) {
+  var reader = new FileReader();
+
+  reader.onload = function(e) {
+    $('.avatar').attr('src', e.target.result);
+  }
+
+  reader.readAsDataURL(input.files[0]);
+}
+}
+
+$("#images").change(function() {
+    readURL(this);
+});
+</script>
+</body>
+</html>

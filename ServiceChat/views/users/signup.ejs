@@ -15,7 +15,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
     <!--web-fonts-->
     <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
     <!--//web-fonts-->
-
+    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 <!-- main -->
@@ -40,6 +40,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                     <input type="text" name="website" placeholder="Website" required="" value="<%= (typeof params == 'object') ? params.website : '' %>">
                     <input type="password" name="password" placeholder="Mật khẩu" required="" value="<%= (typeof params == 'object') ? params.password : '' %>">
                     <input type="password" name="passwordConf" placeholder="Xác nhận mật khẩu" required="" value="<%= (typeof params == 'object') ? params.passwordConf : '' %>">
+                    <center>
+                        <div class="g-recaptcha" data-sitekey="6LcvUA4TAAAAAJJd5Srm3dx_1fQ9NzooiZO-6BFL"></div>
+                    </center>
+
                     <input type="submit" value="Đăng ký">
                 </form>
                 <br />

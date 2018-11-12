@@ -7,6 +7,11 @@ const makeid = (length = 10) => {
   
     return text;
 }
+function addMonths(date, months) {
+    date.setMonth(date.getMonth() + months);
+    return date;
+}
+
 module.exports = {
-    makeid
+    makeid, addMonths
 }

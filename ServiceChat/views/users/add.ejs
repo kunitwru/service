@@ -93,8 +93,14 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="vipExpires">Hạn víp</label>
-                            <input type="date" class="form-control" name="vipExpires" id="vipExpires" value="<%= (typeof params == 'object') ? params.vipExpires : '' %>">
+                            <label for="countVip">Chọn VIP</label>
+                            <select name="countVip" id="countVip" class="form-control">
+                                <option>-- Không --</option>
+                                <option value="1">Dùng thử 30 ngày</option>
+                                <option value="6">6 tháng (400 ngàn)</option>
+                                <option value="12">1 năm ( 600 ngàn)</option>
+                                <option value="18">1,5 năm (1triệu đồng)</option>
+                            </select>
                         </div>
                     </div>
                 </div>

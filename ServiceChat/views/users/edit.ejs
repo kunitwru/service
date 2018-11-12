@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Danh sách các thành viên</title>
+    <title>Cập nhật thông tin member</title>
     <!--Custom Theme files-->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker-standalone.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="/css/admin.css">
     <!--web-fonts-->
     <link href='//fonts.googleapis.com/css?family=Jura:400,300,500,600' rel='stylesheet' type='text/css'>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="//cdn.ckeditor.com/4.10.1/standard/ckeditor.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <!--//web-fonts-->
 </head>
 <body>
@@ -55,10 +59,27 @@
                         <input type="text" class="form-control" disabled id="userCode" value="<%= user.userCode %>">
                     </div>
                 </div>
+                <%
+                function formatDate(date) {
+                    if(!date) {
+                    return '';
+                    }
+                    var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                    if (month.length < 2) month = '0' + month;
+                    if (day.length < 2) day = '0' + day;
+
+                    return [year, month, day].join('-');
+                }
+                %>
+
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="passwordConf">Mật khẩu</label>
-                        <input type="text" class="form-control" disabled id="passwordConf" value="<%= user.passwordConf %>">
+                        <label for="vipExpires">Hạn víp</label>
+                        <input type="date" class="form-control" disabled id="vipExpires" value="<%= formatDate(user.vipExpires) %>">
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -74,9 +95,14 @@
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="vipExpires">Hạn víp</label>
-                        <input type="date" class="form-control" name="vipExpires" id="vipExpires"
-                               value="<%= user.vipExpires; %>">
+                        <label for="countVip">Chọn VIP</label>
+                        <select name="countVip" id="countVip" class="form-control">
+                            <option>-- Không --</option>
+                            <option value="1">Dùng thử 30 ngày</option>
+                            <option value="6">6 tháng (400 ngàn)</option>
+                            <option value="12">1 năm ( 600 ngàn)</option>
+                            <option value="18">1,5 năm (1triệu đồng)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -133,7 +159,10 @@
         $("input[name=image]").change(function () {
             $("#submitAvatar").submit();
         })
-    })
+    });
+
+    $('.datetimepicker').datetimepicker();
+
 </script>
 </body>
 </html>

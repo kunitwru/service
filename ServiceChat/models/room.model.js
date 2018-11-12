@@ -21,7 +21,8 @@ var RoomSchema = new mongoose.Schema({
     },
     created : {
         type : String
-    }
+    },
+    messages : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }]
 });
 
 var Room = mongoose.model('Room', RoomSchema);

@@ -19,11 +19,11 @@ var UserSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: true
     },
     passwordConf: {
         type: String,
-        required: true,
+        required: true
     },
     userCode: {
         type: String,
@@ -54,9 +54,26 @@ var UserSchema = new mongoose.Schema({
         default: 0
     },
     vipExpires: {
-        type: String,
+        type: Date,
         default: null
+    },
+    message1 : {
+        type:String,
+        default : "Chào bạn !"
+    },
+    message2: {
+        type:String,
+        default : "Mình có thể giúp gì được bạn"
+    },
+    created: {
+        type:Date,
+        default: Date.now
+    },
+    updated: {
+        type:Date,
+        default: Date.now
     }
+
 });
 
 //authenticate input against database
@@ -64,7 +81,7 @@ UserSchema.statics.authenticate = function (email, password, callback) {
     User.findOne({email: email})
         .exec(function (err, user) {
             if (err) {
-                return callback(err)
+                return callback(err);
             } else if (!user) {
                 var err = new Error('User not found.');
                 err.status = 401;
@@ -76,9 +93,9 @@ UserSchema.statics.authenticate = function (email, password, callback) {
                 } else {
                     return callback();
                 }
-            })
+            });
         });
-}
+};
 
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
@@ -89,7 +106,7 @@ UserSchema.pre('save', function (next) {
         }
         user.password = hash;
         next();
-    })
+    });
 });
 
 

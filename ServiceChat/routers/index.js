@@ -1,19 +1,22 @@
 var express = require('express');
 var router = express.Router();
 
+const helpers = require('../helper/helper');
+
 var randomstring = require("randomstring");
 var multer = require('multer');
-const { body } = require('express-validator/check');
-
+const {body} = require('express-validator/check');
 //model
-const messageModel = require('../models/message.model');
 const Room = require('../models/room.model');
 const User = require('../models/user.model');
+const Vips = require('../models/vips.model');
 
 const fs = require('fs');
 var path = require('path');
 
 var upload = multer({dest: '/tmp/'});
+
+
 
 
 router.post('/fileUpload', upload.single('image'), function (req, res) {
@@ -70,21 +73,57 @@ function checkLogined(req, res, next) {
         });
 }
 
+function checkLoginedAll(req, res, next) {
+    User.findOne({_id: req.session.userId})
+        .exec(function (error, user) {
+            if (error) {
+                return res.redirect("/");
+            } else {
+                if (user === null) {
+                    return res.redirect("/");
+                } else {
+                    return next();
+                }
+            }
+        });
+}
+
 
 // router index
-router.get("/chatclient/:id", function (req, res) {
-    var userCode = req.params.id;
-    User.findOne({userCode : userCode})
+router.get("/client/:code", function (req, res) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
+    var userCode = req.params.code.trim();
+    if (!userCode) {
+        return res.json({error: "ABC"});
+    }
+    User.findOne({userCode: userCode})
         .exec((error, user) => {
             if (error) {
                 return console.log(error);
             }
             if (user === null) {
-                return console.log("Không tồn tại");
+                return res.render("chat/client", {user: ""});
             } else {
-                res.render("chat/client", {user: user});
+                if (req.query.device == 'mobile' && req.query.tab == 'mobile') {
+                    return res.render("chat/mobile", {
+                        user: user,
+                        currentUrl: req.query.url,
+                        hostname: req.query.domain,
+                        device: req.query.device,
+                        tab: req.query.tab
+                    });
+                }
+                return res.render("chat/client", {
+                    user: user,
+                    currentUrl: req.query.url,
+                    hostname: req.query.domain,
+                    device: req.query.device,
+                    tab: req.query.tab
+                });
             }
-        })
+        });
 
 });
 
@@ -126,7 +165,7 @@ router.get('/signup', function (req, res) {
 
 //POST route for updating data
 router.post('/signup', body('email').custom(value => {
-    return User.findOne({email : value}).then(user => {
+    return User.findOne({email: value}).then(user => {
         if (user) {
             return Promise.reject('Email đã được sử dụng');
         }
@@ -141,7 +180,7 @@ router.post('/signup', body('email').custom(value => {
 
     var errors = req.validationErrors();
     if (errors) {
-        res.render('users/signup', { errors: errors, params : req.body });
+        res.render('users/signup', {errors: errors, params: req.body});
         return;
     }
 
@@ -167,7 +206,7 @@ router.post('/signup', body('email').custom(value => {
 
 
 router.get("/members", checkLogined, function (req, res) {
-    Room.find({}).sort( { created: -1 })
+    Room.find({}).sort({created: -1})
         .exec(function (error, rooms) {
             if (error) {
                 return res.send("Có lỗi xảy ra");
@@ -201,7 +240,7 @@ router.get("/users", function (req, res) {
     var condition = {};
     if (req.query.key) {
         condition = {
-            email : req.query.key
+            email: req.query.key
         }
     }
     User.find(condition)
@@ -223,12 +262,12 @@ router.get("/users/add", function (req, res, next) {
 //POST route for updating data
 
 router.post('/users/add', body('email').custom(value => {
-    return User.findOne({email : value}).then(user => {
+    return User.findOne({email: value}).then(user => {
         if (user) {
             return Promise.reject('Email đã được sử dụng');
         }
     });
-}) ,function (req, res, next) {
+}), function (req, res, next) {
     req.checkBody("email", "Bạn nhập không phải là email.").isEmail();
     req.checkBody("username", "Tên bắt buộc phải nhập.").notEmpty();
     req.checkBody("password", "Mật khẩu bắt buộc phải nhập.").notEmpty();
@@ -237,7 +276,7 @@ router.post('/users/add', body('email').custom(value => {
 
     var errors = req.validationErrors();
     if (errors) {
-        res.render('users/add', { errors: errors, params : req.body });
+        res.render('users/add', {errors: errors, params: req.body});
         return;
     }
 
@@ -248,9 +287,19 @@ router.post('/users/add', body('email').custom(value => {
         userCode: randomstring.generate(20),
         passwordConf: req.body.passwordConf,
         isVip: req.body.isVip,
-        website: req.body.website
+        website: req.body.website,
+        created: Date.now(),
+        updated: Date.now()
     }
 
+    if ((req.body.isVip == 1) && (req.body.countVip > 0)) {
+        var m = new Date();
+        m.setMonth(m.getMonth() + parseInt(req.body.countVip));
+        userData.vipExpires = m;
+    }
+    if (req.body.isVip == 0) {
+        req.body.vipExpires = null;
+    }
     User.create(userData, function (errors, user) {
         if (errors) {
             return res.render("users/add", {errors: errors});
@@ -265,7 +314,7 @@ router.post('/users/add', body('email').custom(value => {
 /*
 profile
  */
-router.get('/profile', function (req, res, next) {
+router.get('/profile', checkLoginedAll, function (req, res, next) {
     User.findById(req.session.userId)
         .exec(function (error, user) {
             if (error) {
@@ -282,7 +331,7 @@ router.get('/profile', function (req, res, next) {
         });
 });
 
-router.post('/profile', function (req, res, next) {
+router.post('/profile', checkLoginedAll, function (req, res, next) {
     User.findById(req.session.userId)
         .exec(function (error, user) {
             if (error) {
@@ -292,23 +341,19 @@ router.post('/profile', function (req, res, next) {
             if (req.body.password && (req.body.password !== req.body.passwordConf)) {
                 return res.render("users/profile", {error: "Mật khẩu không đúng."});
             }
-            if (req.body.password) {
-                var userData = {
-                    username: req.body.username,
-                    newMessage: req.body.newMessage,
-                    password: req.body.password,
-                    passwordConf: req.body.passwordConf,
-                    website : req.body.website,
-                    hotline : req.body.hotline
-                }
-            } else {
-                var userData = {
-                    username: req.body.username,
-                    newMessage: req.body.newMessage,
-                    website : req.body.website,
-                    hotline : req.body.hotline
-                }
+            var userData = {
+                username: req.body.username,
+                newMessage: req.body.newMessage,
+                website: req.body.website,
+                hotline: req.body.hotline,
+                message1: req.body.message1,
+                message2: req.body.message2
             }
+            if (req.body.password) {
+                userData.password = req.body.password;
+                userData.passwordConf = req.body.passwordConf;
+            }
+
             User.updateOne({_id: user._id}, {$set: userData})
                 .exec((err, result) => {
                     if (err) {
@@ -337,6 +382,7 @@ router.get("/users/edit/:id", checkLogined, function (req, res) {
         });
 })
 
+
 router.post("/users/edit/:id", checkLogined, function (req, res) {
     User.findById(req.params.id)
         .exec(function (error, user) {
@@ -346,6 +392,17 @@ router.post("/users/edit/:id", checkLogined, function (req, res) {
                 if (user === null) {
                     return res.send("Có lỗi xảy ra");
                 } else {
+                    req.body.updated = Date.now();
+
+                    if ((req.body.isVip == 1) && (req.body.countVip > 0)) {
+                        var m = new Date(req.body.vipExpires);
+                        m.setMonth(m.getMonth() + parseInt(req.body.countVip));
+                        req.body.vipExpires = m;
+                    }
+                    if (req.body.isVip == 0) {
+                        req.body.vipExpires = null;
+                    }
+
                     User.updateOne({_id: req.params.id}, {$set: req.body})
                         .exec()
                         .then(result => {
@@ -362,7 +419,7 @@ router.post("/users/delete", checkLogined, function (req, res) {
     User.remove({_id: req.body._id})
         .exec((err, result) => {
             if (err) {
-                return res.json({error : 'NG'})
+                return res.json({error: 'NG'})
             }
             console.log(result);
             return res.json({error: 'OK'});
@@ -388,4 +445,116 @@ router.get("/chat", function (req, res) {
     res.render("view");
 });
 
+router.get("/vips", checkLoginedAll, function (req, res, next) {
+    req.checkQuery("email", "Bạn nhập không phải là email.").isEmail();
+    req.checkQuery("name", "Tên bắt buộc phải nhập.").notEmpty();
+    req.checkQuery("user", "Form submit bị lỗi").notEmpty();
+    var errors = req.validationErrors();
+    if (errors) {
+        res.statusCode = 400;
+        res.json({
+            data: errors,
+            msg : "Đăng ký gia hạn không thành công."
+        });
+        return;
+    } else {
+        Vips.find({email: "yahoo@yahoo.com", status: 0}, function (err, vip) {
+            if (err) {
+                res.statusCode = 400;
+                res.json({
+                    msg : "Server bị lỗi."
+                });
+                return;
+            }
+            if (vip.length != 0) {
+                res.statusCode = 200;
+                res.json({
+                    msg : "Bạn đã đăng ký gia hạn và đang được xử lý hoặc chưa chuyển khoản cho Admin."
+                });
+                return;
+            } else {
+                Vips.create(req.query, function (error, vip) {
+                    if(error) {
+                        res.statusCode = 400;
+                        res.json({
+                            data: errors,
+                            msg : "Đăng ký gia hạn không thành công."
+                        });
+                        return false;
+                    }
+                    res.statusCode = 200;
+                    res.json({
+                        messages: "OK",
+                        msg : "Đăng ký gia hạn thành công.",
+                        data: vip
+                    });
+                    return;
+                });
+            }
+        });
+
+    }
+    return;
+});
+
+router.get("/admin/vips", checkLogined, function (req, res, next) {
+    Vips.find()
+        .exec((error, vips) => {
+            if (error) {
+                res.send("Server bị lỗi rùi.");
+                return;
+            }
+            res.render("users/vips", {vips: vips});
+        })
+});
+router.post("/admin/vipupdate", checkLogined, function (req, res) {
+    User.findById(req.body.user)
+        .exec((error, user) => {
+            if (error) {
+                res.json({
+                    ret : 'NG',
+                    msg : 'Upgrade fail'
+                });
+                return;
+            }
+            if (user.length == 0) {
+                res.json({
+                    ret : 'NG',
+                    msg : 'Không tìm thấy user'
+                });
+                return;
+            }
+            // upgrade
+            var userData = {};
+            userData.updated = Date.now();
+
+            if (req.body.month > 0) {
+                var m = new Date();
+                m.setMonth(m.getMonth() + parseInt(req.body.month));
+                userData.vipExpires = m;
+                userData.isVip = true;
+            }
+
+            User.updateOne({_id: user._id}, {$set: userData})
+                .exec()
+                .then(result => {
+                    Vips.updateOne({_id : req.body._id}, {$set : {status : 1}}, function (err, ret) {
+                        if (err) {
+                            res.json({
+                                ret : 'NG',
+                                msg : 'Update status vip thất bại'
+                            });
+                            return;
+                        }
+                        res.json({
+                            ret : 'OK',
+                            msg : 'Thực hiện gia hạn thành công'
+                        });
+                        return;
+                    })
+                })
+                .catch(err => console.log(err));
+        });
+    return;
+});
 module.exports = router;

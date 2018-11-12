@@ -34,6 +34,8 @@
                         <input type="file" name="image" class="text-center center-block well well-sm">
                         <input type="hidden" value="<%= user._id %>" name="user_id" >
                     </form>
+                    <br>
+                    <button type="button" class="btn-giahan btn btn-success btn-block">Gia hạn vip</button>
                 </div>
             </div>
             <!-- edit form column -->
@@ -113,6 +115,22 @@
                         </div>
                         <div class="col-sm-12">
                             <div class="form-group">
+                                <label class="col-lg-3 control-label">Tin nhắn chào thứ nhất</label>
+                                <div class="col-lg-12">
+                                    <input class="form-control" maxlength="255" name="message1" value="<%= user.message1 %>" placeholder="Chào bạn !" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label">Tin nhắn chào thứ hai</label>
+                                <div class="col-lg-12">
+                                    <input class="form-control" maxlength="255" name="message2" value="<%= user.message2 %>" placeholder="Mình có thể giúp gì được bạn !" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group">
                                 <label class="col-lg-3 control-label">Lời chào đầu</label>
                                 <br/><br/>
                                 <div class="col-lg-12">
@@ -121,13 +139,14 @@
                                 </div>
                             </div>
                         </div>
+                    
                         <div class="form-group">
                             <label class="col-md-3 control-label"></label>
                             <div class="col-md-8">
                                 <div class="btn-group">
                                     <input class="btn btn-primary btn-sm" value="Cập nhật" type="submit">
                                     <button type="button" class="btn btn-info btn-sm showEnble">Lấy mã nhúng</button>
-                                    <input class="btn btn-success btn-sm" value="Gia hạn víp" type="button">
+                                    <input class="btn btn-success btn-sm btn-giahan" value="Gia hạn víp" type="button">
                                 </div>
                             </div>
                         </div>
@@ -156,13 +175,94 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="giahanvip" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="giahan">Gia hạn vip</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert" style="display: none;" id="alert-form"></div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h3>Form đăng ký gia hạn</h3>
+                        <hr>
+                        <form action="/vips" method="get" id="submitgiahan">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="name" id="name" value="<%= user.username %>" readonly />
+                                <input type="hidden" name="email" id="email" value="<%= user.email %>" />
+                                <input type="hidden" name="user" id="user" value="<%= user._id %>" />
+                            </div>
+                            <div class="form-group">
+                                <select class="form-control" name="monthCount">
+                                    <option value="6">6 tháng (400 ngàn)</option>
+                                    <option value="12">1 năm ( 600 ngàn)</option>
+                                    <option value="18">1,5 năm (1triệu đồng)</option>
+                                </select>
+                            </div>
+                            <center>
+                                <button type="submit" class="btn btn-primary btn-sm btn-OK">Gia hạn</button>
+                            </center>
+                        </form>
+                    </div>
+                    <div class="col-sm-7">
+                        <h3>Để đăng ký gia hạn vip bạn vui lòng chuyển khoản theo số tài khoản sau</h3>
+                        <ul>
+                            <li>Chủ tài khoản : <b>Phạm Văn Sinh</b></li>
+                            <li>Ngân hàng : <b>Tiên Phong Bank</b></li>
+                            <li>Số tài khoản : <b>01083377001</b></li>
+                            <li>Chi nhánh : <b>Tiên Phong Bank Thăng Long</b></li>
+                            <li>Nội dung chuyển khoản : <b>{Email đăng ký của bạn} {số tháng}</b></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
+        $("#submitgiahan").on("submit", (function (e) {
+            e.preventDefault();
+            var formData = $("#submitgiahan").serialize();
+            $.ajax({
+                type: 'GET',
+                url: $(this).attr('action'),
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+                success: function (data) {
+                    if (data.messages == 'OK') {
+                        $("#alert-form").addClass('alert-success').show().text(data.msg);
+                    }else {
+                        $("#alert-form").addClass('alert-danger').show().text(data.msg);
+                    }
+                    $(".btn-giahan, .btn-OK").hide();
+                },
+                error: function (data) {
+                    $("#alert-form").addClass('alert-danger').show().text(data.msg);
+                }
+            });
+        }));
+
+        $(".btn-giahan").click(function () {
+            $("#giahanvip").modal();
+        })
+
         $(".showEnble").click(function(){
             $("#exampleModal").modal();
-            var codenhung = '<div data-user-id="<%= user.userCode %>" id="chat-main-boot"></div>';
-            codenhung +='<script src="https://fapps.site/main.js">';
-            codenhung += '<\/script>';
+            var codenhung = '<div id="chat24h" data-user-id="<%= user.userCode %>"></div> ';
+            codenhung +='<script src="https://chat24h.net/chat24.js"><\/script>';
             $("#exampleModal .modal-title").text('<%= user.username %>');
             $("#exampleModal .modal-body").text(codenhung);
         });

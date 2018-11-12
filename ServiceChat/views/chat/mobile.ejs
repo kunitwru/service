@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+
+    <script>
+        let rootUserId = '<%= user.userCode %>';
+        let cookieName = '<%= hostname %>';
+        let device = '<%= device %>';
+        let mobileTab = '<%= tab %>';
+        let currentUrl = '<%= currentUrl %>';
+        let message1 = '<%= user.message1 %>';
+        let message2 = '<%= user.message2 %>';
+    </script>
+    <title>Chat Mobile</title>
+</head>
+<body>
+<!------ Include the above in your HEAD tag ---------->
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background-color: #edeff2;
+        font-family: "Calibri", "Roboto", sans-serif;
+    }
+        input[type="color"],
+        input[type="date"],
+        input[type="datetime"],
+        input[type="datetime-local"],
+        input[type="email"],
+        input[type="month"],
+        input[type="number"],
+        input[type="password"],
+        input[type="search"],
+        input[type="tel"],
+        input[type="text"],
+        input[type="time"],
+        input[type="url"],
+        input[type="week"],
+        select:focus,
+        textarea {
+          font-size: 16px;
+        }
+    .chat_window {
+        /*position: absolute;*/
+        width: 100%;
+        /*max-width: 800px;*/
+        height: 500px;
+        /*border-radius: 10px;*/
+        /*background-color: #fff;*/
+        /*left: 50%;*/
+        /*top: 50%;*/
+        /*transform: translateX(-50%) translateY(-50%);*/
+        /*box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);*/
+        /*background-color: #f8f8f8;*/
+        /*overflow: hidden;*/
+    }
+
+    .top_menu {
+        background-color: #fff;
+        width: 100%;
+        padding: 20px 0 15px;
+        box-shadow: 0 1px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .top_menu .buttons {
+        margin: 3px 0 0 20px;
+        position: absolute;
+    }
+
+    .top_menu .buttons .button {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 10px;
+        position: relative;
+    }
+
+    .top_menu .buttons .button.close {
+        background-color: #f5886e;
+    }
+
+    .top_menu .buttons .button.minimize {
+        background-color: #fdbf68;
+    }
+
+    .top_menu .buttons .button.maximize {
+        background-color: #a3d063;
+    }
+
+    .top_menu .title {
+        text-align: center;
+        color: #bcbdc0;
+        font-size: 20px;
+    }
+
+    .messages {
+        position: relative;
+        list-style: none;
+        padding: 20px 10px 0 10px;
+        margin: 0;
+        height: 347px;
+        overflow: scroll;
+    }
+
+    .messages .message {
+        clear: both;
+        overflow: hidden;
+        margin-bottom: 20px;
+        transition: all 0.5s linear;
+        opacity: 0;
+    }
+
+    .messages .message.left .avatar {
+        background-color: #f5886e;
+        float: left;
+    }
+
+    .messages .message.left .text_wrapper {
+        background-color: #ffe6cb;
+        margin-left: 20px;
+    }
+
+    .messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
+        right: 100%;
+        border-right-color: #ffe6cb;
+    }
+
+    .messages .message.left .text {
+        color: #c48843;
+    }
+
+    .messages .message.right .avatar {
+        background-color: #fdbf68;
+        float: right;
+    }
+
+    .messages .message.right .text_wrapper {
+        background-color: #c7eafc;
+        margin-right: 20px;
+        float: right;
+    }
+
+    .messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
+        left: 100%;
+        border-left-color: #c7eafc;
+    }
+    
+
+    .messages .message.right .text {
+        color: #45829b;
+    }
+
+    .messages .message.appeared {
+        opacity: 1;
+    }
+
+    .messages .message .avatar {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .messages .message .text_wrapper {
+        display: inline-block;
+        padding: 20px;
+        border-radius: 6px;
+        width: calc(100% - 85px);
+        min-width: 100px;
+        position: relative;
+    }
+
+    .messages .message .text_wrapper::after, .messages .message .text_wrapper:before {
+        top: 18px;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+    }
+
+    .messages .message .text_wrapper::after {
+        border-width: 13px;
+        margin-top: 0px;
+    }
+
+    .messages .message .text_wrapper::before {
+        border-width: 15px;
+        margin-top: -2px;
+    }
+
+    .messages .message .text_wrapper .text {
+        font-size: 18px;
+        font-weight: 300;
+    }
+
+    .bottom_wrapper {
+        position: relative;
+        width: 100%;
+        background-color: #fff;
+        padding: 20px 0px;
+        position: absolute;
+        bottom: 0;
+    }
+
+    .bottom_wrapper .message_input_wrapper {
+        display: inline-block;
+        height: 50px;
+        border-radius: 25px;
+        border: 1px solid #bcbdc0;
+        width: calc(100% - 60px);
+        position: relative;
+        padding: 0px 20px;
+    }
+
+    .bottom_wrapper .message_input_wrapper .message_input {
+        border: none;
+        height: 100%;
+        box-sizing: border-box;
+        width: calc(100% - 40px);
+        position: absolute;
+        outline-width: 0;
+        color: gray;
+    }
+
+    .bottom_wrapper .send_message {
+        width: 50px;
+        height: 50px;
+        display: inline-block;
+        border-radius: 50px;
+        background-color: #a3d063;
+        border: 2px solid #a3d063;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s linear;
+        text-align: center;
+        float: right;
+    }
+
+    .bottom_wrapper .send_message .text {
+        font-size: 18px;
+        font-weight: 300;
+        display: inline-block;
+        line-height: 48px;
+    }
+
+    .message_template {
+        display: none;
+    }
+
+    div#chat-area-09021990 .khach {
+        line-height: 23px;
+        display: inline-block;
+        width: 97%;
+        text-align: left;
+        padding: 2px 2px 4px 5px;
+        border-top: 1px #ccc solid;
+        color: #333;
+        font-size: 14px;
+    }
+
+    div#chat-area-09021990 .khach .img {
+        float: left;
+        width: 32px;
+        height: 32px;
+        margin: 2px 5px 0px 0px;
+    }
+
+    div#chat-area-09021990 .khach span {
+        color: #CCC;
+        font-size: 12px;
+    }
+
+    div#chat-area-09021990 .admin {
+        line-height: 23px;
+        display: inline-block;
+        width: 97%;
+        text-align: right;
+        padding: 2px 5px 4px 2px;
+        border-top: 1px #ccc solid;
+        color: #333;
+    }
+
+    div#chat-area-09021990 .admin.color-red {
+        color: red;
+        font-size: 14px;
+    }
+
+    div#chat-area-09021990 .admin .img {
+        float: right;
+        width: 32px;
+        height: 32px;
+        margin: 2px 0px 0px 5px;
+    }
+
+    div#chat-area-09021990 .admin span {
+        color: #CCC;
+        font-size: 12px;
+    }
+
+    .list-message-09021990 {
+        overflow: auto;
+        height: 340px;
+    }
+
+    #loichaobatdau .nhanvien {
+        background: #F7F7F7;
+        display: inline-block;
+        width: 97%;
+        text-align: left;
+        padding: 1px 2px 8px 5px;
+        border-bottom: 1px #ccc solid;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    #loichaobatdau .nhanvien .img {
+        float: left;
+        width: 64px;
+        height: 64px;
+        margin: 0px 5px 0px 0px;
+    }
+
+    .loichaodau {
+        width: 100%;
+        height: auto;
+    }
+
+    .loichaodau .imageavatar {
+        width: 100%;
+        float: left;
+        border-bottom: 1px solid #cccccc;
+    }
+
+    .loichaodau .imageavatar img {
+        width: 50px;
+        height: 50px;
+        margin: 10px;
+        float: left;
+        border: 1px solid #ccc;
+    }
+
+    .loichaodau .imageavatar h2 {
+        font-size: 17px;
+        font-weight: bolder;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .loichaodau .imageavatar span.hotline {
+        font-size: 12px;
+    }
+
+    .loichaodau .description-xinchao {
+        float: left;
+        padding: 5px;
+    }
+
+    .loichaodau .description-xinchao p {
+        margin: 0;
+    }
+
+    #start_chat_form .form-befor-name input[name=yourname] {
+        width: 100%;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+        height: 35px;
+        border-radius: 25px;
+        padding-left: 13px;
+    }
+
+    #start_chat_form .form-befor-name input[name=yourname]:focus {
+        outline: none;
+    }
+</style>
+<div class="chat_window" id="chat-area-09021990">
+    <div class="top_menu">
+        <div class="title">Chat</div>
+    </div>
+    <div class="list-message-09021990">
+        <div class="loichaodau">
+            <div class="imageavatar">
+                <img src='<%= user.avatar %>' class="avatar"/>
+                <h2><img src="/images/online.gif" alt="" style="border:0px;width:13px;height:13px;margin:4px 4px 0 0;" class="img"><%= user.username %></h2>
+                <span class="hotline"><%= user.hotline %> - chat24h.net</span>
+            </div>
+            <div class="description-xinchao">
+                <%- user.newMessage %>
+            </div>
+        </div>
+        <div id="identityfine"></div>
+
+    </div>
+    <div class="bottom_wrapper clearfix">
+        <form onsubmit="return startActionChat()" id="start_chat_form" style="display:none">
+            <div class="form-befor-name">
+                <input name="yourname" type="text" placeholder="Số điện thoại và ấn Enter"/>
+                <input name="currentUrl" type="hidden" value="<%= currentUrl %>"/>
+                <input name="hostname" type="hidden" value="<%= hostname %>"/>
+            </div>
+        </form>
+        <form id="chat-action-09021990" onsubmit="return onSubmitForm()" class="form-chat-09021990">
+            <div class="message_input_wrapper">
+                <input id="message-09021990" class="message_input" placeholder="Nhập nội dung ..."
+                       onfocus="checkEixtsUser()"/>
+                <input id="roomid" type="hidden"/>
+            </div>
+            <div class="send_message" onclick="return onSubmitForm()">
+                <div class="icon"></div>
+                <div class="text">Gửi</div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/main.js"></script>
+</body>
+</html>
+
